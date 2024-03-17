@@ -1,0 +1,50 @@
+login and signup:
+https://ui.mantine.dev/category/authentication/
+https://mui.com/joy-ui/getting-started/templates/sign-in-side/
+
+catalog:
+https://ui.mantine.dev/component/articles-cards-grid/
+https://ui.mantine.dev/category/app-cards/
+https://tailwindui.com/components/ecommerce/components/product-lists
+
+event page:
+https://tailwindui.com/components/ecommerce/components/product-overviews
+https://mui.com/joy-ui/getting-started/templates/framesx-web-blocks/
+https://ui.mantine.dev/category/banners/
+comments:
+https://ui.mantine.dev/category/comments/
+
+checkout:
+https://ui.mantine.dev/category/contact/
+
+success:
+https://ui.mantine.dev/category/banners/
+
+errors:
+https://ui.mantine.dev/category/error-pages/
+
+userbar:
+https://tailwindui.com/components/application-ui/navigation/navbars
+https://mui.com/material-ui/react-app-bar/
+https://mui.com/material-ui/api/app-bar/
+
+forms:
+https://tailwindui.com/components/application-ui/forms/form-layouts
+https://ui.mantine.dev/component/get-in-touch-simple/
+
+user space:
+https://ui.mantine.dev/category/features/
+grid/list of cards
+
+Benny:
+checkout
+event page
+login,
+sign up
+user bar
+
+Gal:
+catalog
+success
+new event form
+user space

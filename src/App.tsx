@@ -1,35 +1,32 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import { Catalog } from "./components/catalog/catalog";
+import "@mantine/core/styles.css";
+import React from "react";
+import { useState } from "react";
+
+export interface sessionContextType {
+  permission: number;
+  setPermission: React.Dispatch<React.SetStateAction<number>>;
+}
+export const sessionContext = React.createContext<sessionContextType | null>(
+  null
+);
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [permission, setPermission] = useState(0);
+
+  const providerValues: sessionContextType = {
+    permission,
+    setPermission,
+  };
 
   return (
     <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
+      <sessionContext.Provider value={providerValues}>
+        <Catalog />
+      </sessionContext.Provider>
     </>
-  )
+  );
 }
 
-export default App
+export default App;
