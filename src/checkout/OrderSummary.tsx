@@ -8,6 +8,15 @@ interface ContactIconProps
   description: React.ReactNode;
 }
 
+interface OrderDetail {
+  title: string;
+  description: any;
+}
+
+interface OrderSummaryListProps {
+  orderDetails: OrderDetail[];
+}
+
 function OrderSummary({ title, description, ...others }: ContactIconProps) {
   return (
     <div className={classes.wrapper} {...others}>
@@ -21,16 +30,8 @@ function OrderSummary({ title, description, ...others }: ContactIconProps) {
   );
 }
 
-const MOCKDATA = [
-  { title: "Event:", description: "Maccabi Haifa match" },
-  { title: "Tickets:", description: "2 X Gold Seats" },
-  { title: "Original Price:", description: "100$" },
-  { title: "Discaunt:", description: "0$" },
-  { title: "Price After Discaunt:", description: "Total: 100$" },
-];
-
-export function OrderSummaryList() {
-  const items = MOCKDATA.map((item, index) => (
+export function OrderSummaryList(props: OrderSummaryListProps) {
+  const items = props.orderDetails.map((item, index) => (
     <OrderSummary key={index} {...item} />
   ));
   return <Stack>{items}</Stack>;

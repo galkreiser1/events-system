@@ -7,11 +7,43 @@ import {
   SimpleGrid,
 } from "@mantine/core";
 import { OrderSummaryList } from "./OrderSummary";
-import bg from "./bg.svg";
 import classes from "./Checkout.module.css";
 import "@mantine/core/styles.css";
+import bg from "./bg.svg";
+
+import { useEffect, useState } from "react";
 
 export function Checkout() {
+  const [coupon, setCoupon] = useState("");
+  const [discount, setDiscount] = useState(0);
+
+  let MOCKDATA = [
+    { title: "Event:", description: "Maccabi Haifa match" },
+    { title: "Tickets:", description: "2 X Gold Seats" },
+    { title: "Original Price:", description: "100$" },
+    { title: "Discount:", description: "0$" },
+    { title: "Price After Discount:", description: "100$" },
+  ];
+  const [orderDetails, setOrderDetails] = useState(MOCKDATA);
+
+  useEffect(() => {
+    const originalPrice = parseInt(MOCKDATA[2].description.slice(0, -1));
+    const priceAfterDiscount = originalPrice - discount;
+
+    setOrderDetails([
+      ...orderDetails.slice(0, 3), // Keep the first three items unchanged
+      { title: "Discount:", description: `${discount}$` },
+      { title: "Price After Discount:", description: `${priceAfterDiscount}$` },
+    ]);
+  }, [discount]);
+
+  const activateCoupon = (coupon: string) => {
+    if (coupon === "maccabi") {
+      setDiscount(30);
+      console.log("Coupon Activated");
+    }
+  };
+
   return (
     <Paper shadow="md" radius="lg">
       <div className={classes.wrapper}>
@@ -23,7 +55,7 @@ export function Checkout() {
             Order Summary
           </Text>
 
-          <OrderSummaryList />
+          <OrderSummaryList orderDetails={orderDetails} />
         </div>
 
         <form
@@ -63,13 +95,20 @@ export function Checkout() {
             </SimpleGrid>
             <div className={classes.controlscpn}>
               <TextInput
+                value={coupon}
+                onChange={(event) => setCoupon(event.target.value)}
                 placeholder="Insert Coupon Code"
                 classNames={{
                   input: classes.inputcpn,
                   root: classes.inputWrappercpn,
                 }}
               />
-              <Button className={classes.controlcpn}>Activate</Button>
+              <Button
+                className={classes.controlcpn}
+                onClick={() => activateCoupon(coupon)}
+              >
+                Activate
+              </Button>
             </div>
 
             <Group justify="flex-start" mt="md">
