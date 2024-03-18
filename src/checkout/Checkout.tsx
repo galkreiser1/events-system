@@ -64,97 +64,107 @@ export function Checkout() {
   //TODO: add form validations
 
   return (
-    <Paper shadow="md" radius="lg">
-      <div className={classes.wrapper}>
-        <div
-          className={classes.contacts}
-          style={{ backgroundImage: `url(${bg})` }}
-        >
-          <Text fz="lg" fw={700} className={classes.title} c="#fff">
-            Order Summary
-          </Text>
+    <div
+      style={{
+        display: "flex",
+        placeContent: "center",
+        placeItems: "center",
+        height: "80vh",
+      }}
+    >
+      <Paper shadow="md" radius="lg">
+        <div className={classes.wrapper}>
+          <div
+            className={classes.contacts}
+            style={{ backgroundImage: `url(${bg})` }}
+          >
+            <Text fz="xl" fw={700} className={classes.title} c="#fff">
+              Order Summary
+            </Text>
 
-          <OrderSummaryList orderDetails={orderDetails} />
-        </div>
-        <form
-          className={classes.form}
-          onSubmit={(event) => event.preventDefault()}
-        >
-          <Text fz="lg" fw={700} className={classes.title}>
-            Checkout
-          </Text>
-
-          <div className={classes.fields}>
-            <TextInput
-              style={{ marginTop: "15px" }}
-              label="Your name"
-              placeholder="English letters only"
-              required
-              value={paymentDetails.holder}
-              onChange={handleInputChange}
-              name="holder"
-
-              //{...form.getInputProps("holder")}
-            />
-            <TextInput
-              style={{ marginTop: "15px" }}
-              label="Credit card number"
-              placeholder="0-9 digits only"
-              required
-              value={paymentDetails.cc}
-              onChange={handleInputChange}
-              name="cc"
-            />
-            <SimpleGrid cols={{ base: 1, sm: 2 }}>
-              <TextInput
-                style={{ marginTop: "15px" }}
-                label="Expiration date"
-                placeholder="MM/YY"
-                required
-                value={paymentDetails.exp}
-                onChange={handleInputChange}
-                name="exp"
-              />
-              <TextInput
-                style={{ marginTop: "15px" }}
-                label="cvv"
-                placeholder="cvv"
-                required
-                value={paymentDetails.cvv}
-                onChange={handleInputChange}
-                name="cvv"
-              />
-            </SimpleGrid>
-            <div className={classes.controlscpn}>
-              <TextInput
-                value={coupon}
-                onChange={(event) => setCoupon(event.target.value)}
-                placeholder="Insert Coupon Code"
-                classNames={{
-                  input: classes.inputcpn,
-                  root: classes.inputWrappercpn,
-                }}
-              />
-              <Button
-                className={classes.controlcpn}
-                onClick={() => activateCoupon(coupon)}
-              >
-                Activate
-              </Button>
-            </div>
-
-            <Group justify="flex-start" mt="md">
-              <Button
-                type="submit"
-                className={classes.control}
-                onClick={handleFormSubmit}
-              >
-                Buy Now
-              </Button>
-            </Group>
+            <OrderSummaryList orderDetails={orderDetails} />
           </div>
-        </form>
-      </div>
-    </Paper>
+          <form
+            className={classes.form}
+            onSubmit={(event) => event.preventDefault()}
+          >
+            <Text fz="xl" fw={700} mb={30} className={classes.title}>
+              Checkout
+            </Text>
+
+            <div className={classes.fields}>
+              <TextInput
+                style={{ marginTop: "15px" }}
+                label="Your name"
+                placeholder="English letters only"
+                required
+                value={paymentDetails.holder}
+                onChange={handleInputChange}
+                name="holder"
+
+                //{...form.getInputProps("holder")}
+              />
+              <TextInput
+                style={{ marginTop: "15px" }}
+                label="Credit card number"
+                placeholder="0-9 digits only"
+                required
+                value={paymentDetails.cc}
+                onChange={handleInputChange}
+                name="cc"
+              />
+              <SimpleGrid cols={{ base: 1, sm: 2 }}>
+                <TextInput
+                  style={{ marginTop: "15px" }}
+                  label="Expiration date"
+                  placeholder="MM/YY"
+                  required
+                  value={paymentDetails.exp}
+                  onChange={handleInputChange}
+                  name="exp"
+                />
+                <TextInput
+                  style={{ marginTop: "15px" }}
+                  label="cvv"
+                  placeholder="cvv"
+                  required
+                  value={paymentDetails.cvv}
+                  onChange={handleInputChange}
+                  name="cvv"
+                />
+              </SimpleGrid>
+              <div className={classes.controlscpn}>
+                <TextInput
+                  mb={15}
+                  value={coupon}
+                  onChange={(event) => setCoupon(event.target.value)}
+                  placeholder="Insert Coupon Code"
+                  classNames={{
+                    input: classes.inputcpn,
+                    root: classes.inputWrappercpn,
+                  }}
+                />
+                <Button
+                  className={classes.controlcpn}
+                  onClick={() => activateCoupon(coupon)}
+                >
+                  Activate
+                </Button>
+              </div>
+
+              <Group justify="flex-start" mt="md">
+                <Button
+                  type="submit"
+                  className={classes.control}
+                  onClick={handleFormSubmit}
+                >
+                  Buy Now
+                </Button>
+              </Group>
+            </div>
+          </form>
+        </div>
+      </Paper>
+    </div>
   );
 }
