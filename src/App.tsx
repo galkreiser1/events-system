@@ -1,8 +1,9 @@
 import "./App.css";
-import { Catalog } from "./components/catalog/catalog";
+//import { Catalog } from "./components/catalog/catalog";
 import "@mantine/core/styles.css";
 import React from "react";
 import { useState } from "react";
+import { SignIn } from "./signin/SignIn";
 
 export interface sessionContextType {
   permission: number;
@@ -21,11 +22,10 @@ function App() {
   };
 
   return (
-    <>
-      <sessionContext.Provider value={providerValues}>
-        <Catalog />
-      </sessionContext.Provider>
-    </>
+    <sessionContext.Provider value={providerValues}>
+      <SignIn />
+      {/* <Checkout /> */}
+    </sessionContext.Provider>
   );
 }
 
