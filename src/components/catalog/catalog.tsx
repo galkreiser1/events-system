@@ -1,7 +1,7 @@
 import { SimpleGrid, Container } from "@mantine/core";
 import "./catalog.css";
 
-import { EventCard } from "../eventcard/eventcard";
+import { EventCard } from "./eventcard/eventcard";
 
 const mockdata = [
   {
