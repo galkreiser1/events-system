@@ -43,8 +43,9 @@ const mockdata = [
 ];
 
 export function Catalog() {
-  const cards = mockdata.map((article) => (
+  const cards = mockdata.map((article, index) => (
     <EventCard
+      key={index}
       title={article.title}
       image={article.image}
       date={new Date(article.date)}

@@ -1,5 +1,6 @@
 import { Title, Text, Button, Container, Group } from "@mantine/core";
 import "./SuccessPage.css";
+import { Link } from "react-router-dom";
 
 export function SuccessPage() {
   return (
@@ -21,9 +22,11 @@ export function SuccessPage() {
       </Container>
 
       <Group justify="center">
-        <Button variant="subtle" size="md">
-          Take me back to home page
-        </Button>
+        <Link to="/">
+          <Button variant="subtle" size="md">
+            Take me back to home page
+          </Button>
+        </Link>
       </Group>
     </Container>
   );
