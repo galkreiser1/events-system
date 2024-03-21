@@ -1,23 +1,8 @@
 import { Card, Image, Text, Group, Badge, Button } from "@mantine/core";
 import "./eventcard.css";
 import React from "react";
-import { sessionContext } from "../../App";
-
-// const mockdata = {
-//   image:
-//     "https://images.unsplash.com/photo-1437719417032-8595fd9e9dc6?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=600&q=80",
-//   title: "Verudela Beach",
-//   country: "Croatia",
-//   description:
-//     "Completely renovated for the season 2020, Arena Verudela Bech Apartments are fully equipped and modernly furnished 4-star self-service apartments located on the Adriatic coastline by one of the most beautiful beaches in Pula.",
-//   badges: [
-//     { emoji: "☀️", label: "Sunny weather" },
-//     { emoji: "🦓", label: "Onsite zoo" },
-//     { emoji: "🌊", label: "Sea" },
-//     { emoji: "🌲", label: "Nature" },
-//     { emoji: "🤽", label: "Water sports" },
-//   ],
-// };
+import { sessionContext } from "../../../App";
+import { Link } from "react-router-dom";
 
 type EventCardProps = {
   image: string;
@@ -61,23 +46,21 @@ export function EventCard({
         <Text fz="md" mt="xs">
           {date.toLocaleDateString("en-GB")}
         </Text>
-      </Card.Section>
 
-      <Card.Section className="section" mt="auto">
         {context?.permission == 0 && (
-          <Text mt="md" className="label">
-            Starting from: {start_price}$
-          </Text>
+          <Text mt="md">Starting from: {start_price}$</Text>
         )}
-        <Text mt="md" className="label" c="dimmed">
+        <Text mt="md" c="dimmed">
           Tickets left: {tickets_left}
         </Text>
       </Card.Section>
 
       <Group mt="auto">
-        <Button radius="md" style={{ flex: 1 }}>
-          {buttonText}
-        </Button>
+        <Link to="/success">
+          <Button radius="md" style={{ flex: 1 }}>
+            {buttonText}
+          </Button>
+        </Link>
       </Group>
     </Card>
   );
