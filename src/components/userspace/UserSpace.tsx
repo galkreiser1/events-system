@@ -79,8 +79,8 @@ export function UserSpace() {
 
   return (
     <>
-      <Title mb="xl">Username</Title>
-      <Container size="auto">
+      <Container size="lg">
+        <Title mb="xl">Username</Title>
         <Table withTableBorder>
           <Table.Thead>
             <Table.Tr>
