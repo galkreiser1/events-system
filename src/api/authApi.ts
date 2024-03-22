@@ -1,6 +1,6 @@
 import { APIStatus } from "../types";
 import {
-  SERVERURL,
+  USERS_SERVER_URL,
   LOGIN_PATH,
   LOGOUT_PATH,
   SIGNUP_PATH,
@@ -15,7 +15,7 @@ interface Credentials {
 export const AuthApi = {
   login: async ({ username, password }: Credentials): Promise<APIStatus> => {
     try {
-      const response = await fetch(SERVERURL + LOGIN_PATH, {
+      const response = await fetch(USERS_SERVER_URL + LOGIN_PATH, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -36,7 +36,7 @@ export const AuthApi = {
 
   signUp: async ({ username, password }: Credentials): Promise<APIStatus> => {
     try {
-      const response = await fetch(SERVERURL + SIGNUP_PATH, {
+      const response = await fetch(USERS_SERVER_URL + SIGNUP_PATH, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -63,7 +63,7 @@ export const AuthApi = {
 
   logout: async (): Promise<APIStatus> => {
     try {
-      const response = await fetch(SERVERURL + LOGOUT_PATH, {
+      const response = await fetch(USERS_SERVER_URL + LOGOUT_PATH, {
         method: "POST",
         credentials: "include",
       });
@@ -77,7 +77,7 @@ export const AuthApi = {
   },
   getUserName: async (): Promise<string | APIStatus> => {
     try {
-      const response = await fetch(SERVERURL + USERNAME_PATH, {
+      const response = await fetch(USERS_SERVER_URL + USERNAME_PATH, {
         method: "GET",
         credentials: "include",
       });
