@@ -4,7 +4,6 @@ import classes from "./EventPage.module.css";
 import { Tickets } from "./tickets/Tickets";
 import { Comment } from "./comments/Comment";
 
-
 export function EventPage() {
   const eventData = {
     title: "Maccabi Haifa match",
@@ -20,8 +19,6 @@ export function EventPage() {
     availableTickets: 100,
     priceStarts: 20,
   };
-
-
 
   // TODO: add comment button
 
@@ -65,7 +62,7 @@ export function EventPage() {
       </div>
       <Tickets />
 
-      <Comment />
+      <Comment eventData={eventData} />
     </div>
   );
 }

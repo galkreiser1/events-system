@@ -9,10 +9,13 @@ import {
   Divider,
   ScrollArea,
   Button,
+  Modal,
+  TextInput,
+  Textarea,
 } from "@mantine/core";
-import { Carousel } from "@mantine/carousel";
-
-export function Comment() {
+import { useDisclosure } from "@mantine/hooks";
+import { CommentForm } from "./CommentForm/CommentForm";
+export function Comment({ eventData }: { eventData: any }) {
   const commentsData = [
     {
       From: "Benny",
@@ -32,6 +35,9 @@ export function Comment() {
     },
     { From: "David", At: "2024-03-21T2030", Content: "I'm sure we will win!" },
   ];
+  const [opened, { open, close }] = useDisclosure(false);
+  const [comment, setComment] = React.useState("");
+
   return (
     <div className={classes.comments_wrapper}>
       <Title className={classes.comments_title}>Comments:</Title>
@@ -56,7 +62,29 @@ export function Comment() {
           </div>
         ))}
       </ScrollArea>
-      <Button mt={"lg"} color="rgb(100, 187, 221)" ta="center" w={150}>
+      <Modal
+        opened={opened}
+        onClose={() => {
+          close();
+          setComment("");
+        }}
+        title={eventData.title}
+        size="md"
+        overlayProps={{
+          backgroundOpacity: 0.55,
+          blur: 3,
+        }}
+      >
+        <CommentForm setComment={setComment} comment={comment} close={close} />
+      </Modal>
+
+      <Button
+        onClick={open}
+        mt={"lg"}
+        color="rgb(100, 187, 221)"
+        ta="center"
+        w={150}
+      >
         Add Comment
       </Button>
     </div>
