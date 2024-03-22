@@ -2,6 +2,8 @@ import react from "react";
 import { Title, Text } from "@mantine/core";
 import classes from "./EventPage.module.css";
 import { Tickets } from "./tickets/Tickets";
+import { Comment } from "./comments/Comment";
+
 
 export function EventPage() {
   const eventData = {
@@ -19,25 +21,7 @@ export function EventPage() {
     priceStarts: 20,
   };
 
-  const commentsData = [
-    {
-      From: "Benny",
-      At: "2024-03-21T2030",
-      Content: "I'm so excited for the game!",
-    },
-    {
-      From: "Shlomo",
-      At: "2024-03-21T2030",
-      Content: "I Hope MAccabi will win this game",
-    },
-    {
-      From: "Yossi",
-      At: "2024-03-21T2030",
-      Content:
-        "Very long long long long long long long long long long long long long long long long long long long long long long comment",
-    },
-    { From: "David", At: "2024-03-21T2030", Content: "I'm sure we will win!" },
-  ];
+
 
   // TODO: add comment button
 
@@ -80,6 +64,8 @@ export function EventPage() {
         </div>
       </div>
       <Tickets />
+
+      <Comment />
     </div>
   );
 }

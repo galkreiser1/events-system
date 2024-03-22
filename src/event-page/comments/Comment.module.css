@@ -1,0 +1,37 @@
+.comments_wrapper {
+  margin-top: 1%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+  width: 30%;
+}
+
+.comments_title {
+  align-self: center;
+  font-size: rem(24px);
+  font-weight: 700;
+  margin-bottom: var(--mantine-spacing-lg);
+  margin-top: var(--mantine-spacing-lg);
+  color: var(--mantine-color-black), var(--mantine-color-white);
+}
+
+.comment_container {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1%;
+}
+
+.scrollbar {
+  &,
+  &:hover {
+    background-color: light-dark(
+      var(--mantine-color-gray-0),
+      var(--mantine-color-dark-6)
+    );
+  }
+
+  &[data-orientation="vertical"] .thumb {
+    background-color: var(--mantine-color-blue-2);
+  }
+}
