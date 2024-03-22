@@ -1,17 +1,9 @@
 import * as mongoose from "mongoose";
 
-export interface orderType {
-  checkout_date: Date;
-  ticket_type: string;
-  quantity: number;
-  event_id: string;
-}
-
 export interface userType {
   username: string;
   password: string;
   permission: "U" | "W" | "M" | "A";
-  orders: orderType[];
   coupons_used: number;
 }
 
