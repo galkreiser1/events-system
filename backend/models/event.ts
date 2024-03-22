@@ -1,11 +1,5 @@
 import * as mongoose from "mongoose";
 
-interface commentType {
-  username: string;
-  comment: string;
-  date: Date;
-}
-
 interface ticketType {
   type: string;
   quantity: number;
@@ -22,7 +16,6 @@ interface eventType {
   location: string;
   tickets: ticketType[];
   image: string;
-  comments: commentType[];
 }
 
 const eventSchema = new mongoose.Schema<eventType>({
@@ -72,15 +65,6 @@ const eventSchema = new mongoose.Schema<eventType>({
     },
   },
   image: { type: String },
-  comments: {
-    type: [
-      {
-        username: { type: String, required: true },
-        comment: { type: String, required: true },
-        date: { type: Date, required: true },
-      },
-    ],
-  },
 });
 
 export default mongoose.model("Event", eventSchema);
