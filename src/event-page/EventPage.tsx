@@ -1,3 +1,4 @@
+// @ts-ignore
 import react from "react";
 import { Title, Text } from "@mantine/core";
 import classes from "./EventPage.module.css";

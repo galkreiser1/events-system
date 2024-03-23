@@ -5,13 +5,10 @@ import {
   Group,
   Text,
   Avatar,
-  Center,
   Divider,
   ScrollArea,
   Button,
   Modal,
-  TextInput,
-  Textarea,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { CommentForm } from "./CommentForm/CommentForm";

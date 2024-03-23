@@ -1,3 +1,5 @@
+// @ts-ignore
+
 import React, { useState } from "react";
 import { ScrollArea, Title, Button, Text, NumberInput } from "@mantine/core";
 import classes from "./Tickets.module.css";

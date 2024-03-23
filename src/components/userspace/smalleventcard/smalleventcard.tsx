@@ -1,4 +1,4 @@
-import { Card, Image, Text, Group, Badge, Button } from "@mantine/core";
+import { Card, Text, Badge } from "@mantine/core";
 import "./smalleventcard.css";
 
 type EventCardProps = {
