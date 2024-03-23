@@ -1,6 +1,6 @@
 import { Title, Text, Button, Container, Group } from "@mantine/core";
 import "./SuccessPage.css";
-import { Link } from "react-router-dom";
+// import { Link } from "react-router-dom";
 
 export function SuccessPage() {
   return (
