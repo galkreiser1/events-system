@@ -56,11 +56,11 @@ export function EventCard({
       </Card.Section>
 
       <Group mt="auto">
-        <Link to="/success">
-          <Button radius="md" style={{ flex: 1 }}>
-            {buttonText}
-          </Button>
-        </Link>
+        {/* <Link to="/success"> */}
+        <Button radius="md" style={{ flex: 1 }}>
+          {buttonText}
+        </Button>
+        {/* </Link> */}
       </Group>
     </Card>
   );

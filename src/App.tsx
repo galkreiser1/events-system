@@ -45,7 +45,8 @@ function App() {
 
   return (
     <sessionContext.Provider value={providerValues}>
-      <RouterProvider router={router} />
+      {/* <RouterProvider router={router} /> */}
+      <Catalog />
     </sessionContext.Provider>
   );
 }

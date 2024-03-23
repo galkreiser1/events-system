@@ -22,11 +22,11 @@ export function SuccessPage() {
       </Container>
 
       <Group justify="center">
-        <Link to="/">
-          <Button variant="subtle" size="md">
-            Take me back to home page
-          </Button>
-        </Link>
+        {/* <Link to="/"> */}
+        <Button variant="subtle" size="md">
+          Take me back to home page
+        </Button>
+        {/* </Link> */}
       </Group>
     </Container>
   );
