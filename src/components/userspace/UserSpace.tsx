@@ -1,11 +1,4 @@
-import {
-  Table,
-  Title,
-  Container,
-  Accordion,
-  Text,
-  SimpleGrid,
-} from "@mantine/core";
+import { Table, Title, Container, Accordion } from "@mantine/core";
 import { SmallEventCard } from "./smalleventcard/smalleventcard";
 import "./UserSpace.css";
 
