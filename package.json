@@ -1,5 +1,5 @@
 {
-  "name": "events-system",
+  "name": "events-system-frontend",
   "private": true,
   "version": "0.0.0",
   "type": "module",
@@ -17,7 +17,6 @@
     "@mantine/hooks": "^7.6.2",
     "@tabler/icons-react": "^3.1.0",
     "dayjs": "^1.11.10",
->>>>>>> 8754add4e6eb87ae888c1c9c14f0a4a080404ecf
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.22.3"
