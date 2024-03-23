@@ -1,9 +1,12 @@
 import "./App.css";
-//import { Catalog } from "./components/catalog/catalog";
 import "@mantine/core/styles.css";
 import React from "react";
 import { useState } from "react";
-import { SignIn } from "./signin/SignIn";
+import { EventForm } from "./components/eventform/eventform";
+import { Catalog } from "./components/catalog/catalog";
+import { UserSpace } from "./components/userspace/UserSpace";
+import { SuccessPage } from "./success_page/SuccessPage";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 export interface sessionContextType {
   permission: number;
@@ -12,6 +15,25 @@ export interface sessionContextType {
 export const sessionContext = React.createContext<sessionContextType | null>(
   null
 );
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Catalog />,
+  },
+  {
+    path: "/user",
+    element: <UserSpace />,
+  },
+  {
+    path: "/eventform",
+    element: <EventForm />,
+  },
+  {
+    path: "/success",
+    element: <SuccessPage />,
+  },
+]);
 
 function App() {
   const [permission, setPermission] = useState(0);
@@ -23,8 +45,7 @@ function App() {
 
   return (
     <sessionContext.Provider value={providerValues}>
-      <SignIn />
-      {/* <Checkout /> */}
+      <RouterProvider router={router} />
     </sessionContext.Provider>
   );
 }
