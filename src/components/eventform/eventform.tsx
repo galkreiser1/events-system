@@ -14,28 +14,33 @@ import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DatePickerInput } from "@mantine/dates";
 import "@mantine/dates/styles.css";
 import { useState } from "react";
+import { EventApi } from "../../api/eventApi";
 
 dayjs.extend(customParseFormat);
 
 export function EventForm() {
   const form = useForm({
     initialValues: {
-      name: "",
+      title: "",
       organizer: "",
       start_date: null,
       end_date: null,
       category: "",
-      img: "",
+      image: "",
+      location: "",
       description: "",
     },
     validate: {
-      name: (value) => (value.trim().length < 1 ? "Name can't be empty" : null),
+      title: (value) =>
+        value.trim().length < 1 ? "Title can't be empty" : null,
       organizer: (value) =>
         value.trim().length < 1 ? "Organizer can't be empty" : null,
+      location: (value) =>
+        value.trim().length < 1 ? "Location can't be empty" : null,
       start_date: (value) =>
         value === null ? "Start date can't be empty" : null,
       end_date: (value) => (value === null ? "End date can't be empty" : null),
-      img: (value) =>
+      image: (value) =>
         value.trim().length < 1 ? "Img URL can't be empty" : null,
       description: (value) =>
         value.trim().length < 1 ? "Description can't be empty" : null,
@@ -44,9 +49,9 @@ export function EventForm() {
 
   const [inputs, setInputs] = useState([
     {
-      ticket_name: "Normal",
-      ticket_price: 0,
-      ticket_quantity: 0,
+      type: "Normal",
+      price: 0,
+      quantity: 0,
     },
   ]);
 
@@ -57,10 +62,7 @@ export function EventForm() {
   };
 
   const handleAddInput = () => {
-    const values = [
-      ...inputs,
-      { ticket_name: "Normal", ticket_price: 0, ticket_quantity: 0 },
-    ];
+    const values = [...inputs, { type: "Normal", price: 0, quantity: 0 }];
     setInputs(values);
   };
 
@@ -111,9 +113,9 @@ export function EventForm() {
     let hasError = false;
     inputs.forEach((input) => {
       if (
-        validateName(input.ticket_name) !== "" ||
-        validatePrice(input.ticket_price) !== "" ||
-        validateQuantity(input.ticket_quantity) !== ""
+        validateName(input.type) !== "" ||
+        validatePrice(input.price) !== "" ||
+        validateQuantity(input.quantity) !== ""
       ) {
         hasError = true;
       }
@@ -121,12 +123,17 @@ export function EventForm() {
     return hasError;
   };
 
-  const handleSubmit = (values: any) => {
+  const handleSubmit = async (values: any) => {
     if (checkTicketInputs()) {
       return;
     }
     const combined_values = { ...values, tickets: inputs };
     console.log(combined_values);
+    try {
+      await EventApi.createEvent(combined_values);
+    } catch (e) {
+      console.error(e);
+    }
   };
 
   return (
@@ -149,10 +156,10 @@ export function EventForm() {
 
           <SimpleGrid cols={{ base: 1, sm: 2 }} mt="xl" mb="lg">
             <TextInput
-              label="Name"
-              name="name"
+              label="Title"
+              name="title"
               variant="filled"
-              {...form.getInputProps("name")}
+              {...form.getInputProps("title")}
             />
             <TextInput
               label="Organizer"
@@ -161,22 +168,31 @@ export function EventForm() {
               {...form.getInputProps("organizer")}
             />
           </SimpleGrid>
-          <NativeSelect
-            mb="lg"
-            label="Category"
-            variant="filled"
-            data={[
-              "Charity Event",
-              "Concert",
-              "Conference",
-              "Convention",
-              "Exhibition",
-              "Festival",
-              "Product Launch",
-              "Sports Event",
-            ]}
-            {...form.getInputProps("category")}
-          />
+          <SimpleGrid cols={{ base: 1, sm: 2 }} mt="xl" mb="lg">
+            <NativeSelect
+              mb="lg"
+              value="Charity Event"
+              label="Category"
+              variant="filled"
+              data={[
+                "Charity Event",
+                "Concert",
+                "Conference",
+                "Convention",
+                "Exhibition",
+                "Festival",
+                "Product Launch",
+                "Sports Event",
+              ]}
+              {...form.getInputProps("category")}
+            />
+            <TextInput
+              label="Location"
+              name="location"
+              variant="filled"
+              {...form.getInputProps("location")}
+            />
+          </SimpleGrid>
 
           <SimpleGrid cols={{ base: 1, sm: 2 }} mt="xl" mb="lg">
             <DatePickerInput
@@ -198,7 +214,7 @@ export function EventForm() {
             label="Img URL"
             name="img-url"
             variant="filled"
-            {...form.getInputProps("img")}
+            {...form.getInputProps("image")}
           />
 
           <Textarea
@@ -217,33 +233,33 @@ export function EventForm() {
               <Group justify="center" mt="lg" key={index}>
                 <TextInput
                   label="Type"
-                  name="ticket_name"
+                  name="type"
                   placeholder="Name"
-                  value={input.ticket_name}
+                  value={input.type}
                   onChange={(event) => {
                     handleChangeInput(index, event);
                   }}
-                  error={validateName(input.ticket_name)}
+                  error={validateName(input.type)}
                 />
                 <TextInput
                   label="Price"
-                  name="ticket_price"
+                  name="price"
                   placeholder="Price"
-                  value={input.ticket_price}
+                  value={input.price}
                   onChange={(event) => {
                     handleChangeInput(index, event);
                   }}
-                  error={validatePrice(input.ticket_price)}
+                  error={validatePrice(input.price)}
                 />
                 <TextInput
                   label="Quantity"
-                  name="ticket_quantity"
+                  name="quantity"
                   placeholder="Quantity"
-                  value={input.ticket_quantity}
+                  value={input.quantity}
                   onChange={(event) => {
                     handleChangeInput(index, event);
                   }}
-                  error={validateQuantity(input.ticket_quantity)}
+                  error={validateQuantity(input.quantity)}
                 />
                 <Button
                   mt="lg"
