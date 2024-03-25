@@ -9,6 +9,7 @@ export const USERNAME_PATH = "/api/username";
 export const USERS_SERVER_URL = "https://events-system-users.onrender.com/";
 
 /* EVENTS */
+export const EVENTS_SERVER_URL = "https://events-system-event.onrender.com";
 export const GET_ALL_EVENTS_PATH = "/api/event";
 export const GET_EVENT_PATH = "/api/event/:id";
 export const CREATE_EVENT_PATH = "/api/event";
