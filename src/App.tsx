@@ -7,7 +7,7 @@ import { useState } from "react";
 // import { UserSpace } from "./components/userspace/UserSpace";
 // import { SuccessPage } from "./success_page/SuccessPage";
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { EventPage } from "./event-page/EventPage";
+// import { EventPage } from "./event-page/EventPage";
 
 export interface sessionContextType {
   permission: number;
@@ -47,7 +47,7 @@ function App() {
   return (
     <sessionContext.Provider value={providerValues}>
       {/* <RouterProvider router={router}> */}
-      <EventPage />
+      {/* <EventPage /> */}
     </sessionContext.Provider>
   );
 }
