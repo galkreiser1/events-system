@@ -3,11 +3,11 @@ import "@mantine/core/styles.css";
 import React from "react";
 import { useState } from "react";
 // import { EventForm } from "./components/eventform/eventform";
-import { Catalog } from "./components/catalog/catalog";
+// import { Catalog } from "./components/catalog/catalog";
 // import { UserSpace } from "./components/userspace/UserSpace";
 // import { SuccessPage } from "./success_page/SuccessPage";
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
-// import { EventPage } from "./event-page/EventPage";
+import { EventPage } from "./event-page/EventPage";
 
 export interface sessionContextType {
   permission: number;
@@ -47,7 +47,7 @@ function App() {
   return (
     <sessionContext.Provider value={providerValues}>
       {/* <RouterProvider router={router}> */}
-      <Catalog />
+      <EventPage />
     </sessionContext.Provider>
   );
 }
