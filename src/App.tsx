@@ -7,6 +7,7 @@ import { Catalog } from "./components/catalog/catalog";
 // import { UserSpace } from "./components/userspace/UserSpace";
 // import { SuccessPage } from "./success_page/SuccessPage";
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
+// import { EventPage } from "./event-page/EventPage";
 
 export interface sessionContextType {
   permission: number;
@@ -45,7 +46,7 @@ function App() {
 
   return (
     <sessionContext.Provider value={providerValues}>
-      {/* <RouterProvider router={router} /> */}
+      {/* <RouterProvider router={router}> */}
       <Catalog />
     </sessionContext.Provider>
   );
