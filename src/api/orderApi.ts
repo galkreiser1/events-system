@@ -1,13 +1,17 @@
 import { APIStatus } from "../types";
 import axios from "axios";
-import { CREATE_ORDER_PATH } from "../const";
+import { CREATE_ORDER_PATH, USERS_SERVER_URL } from "../const";
 
 export const OrderApi = {
   createOrder: async (order: any): Promise<APIStatus> => {
     try {
-      const res = await axios.post(CREATE_ORDER_PATH, order, {
-        headers: { admin: "admin" },
-      });
+      const res = await axios.post(
+        USERS_SERVER_URL + CREATE_ORDER_PATH,
+        order,
+        {
+          headers: { admin: "admin" },
+        }
+      );
 
       if (res.status === 201) {
         return APIStatus.Success;
@@ -20,7 +24,7 @@ export const OrderApi = {
   },
   getUserOrders: async (userId: string): Promise<any | APIStatus> => {
     try {
-      const res = await axios.get(`/api/order/${userId}`, {
+      const res = await axios.get(`${USERS_SERVER_URL}/api/order/${userId}`, {
         headers: { admin: "admin" },
       });
 
@@ -35,9 +39,12 @@ export const OrderApi = {
   },
   getUsersByEvent: async (eventId: string): Promise<any | APIStatus> => {
     try {
-      const res = await axios.get(`/api/order/users/${eventId}`, {
-        headers: { admin: "admin" },
-      });
+      const res = await axios.get(
+        `${USERS_SERVER_URL}/api/order/users/${eventId}`,
+        {
+          headers: { admin: "admin" },
+        }
+      );
 
       if (res.status === 200) {
         return res.data;
