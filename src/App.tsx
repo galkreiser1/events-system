@@ -1,12 +1,12 @@
 import "./App.css";
 import "@mantine/core/styles.css";
-import React from "react";
-import { useState } from "react";
 // import { EventForm } from "./components/eventform/eventform";
 import { Catalog } from "./components/catalog/catalog";
-// import { UserSpace } from "./components/userspace/UserSpace";
-// import { SuccessPage } from "./success_page/SuccessPage";
-// import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import { EventPage } from "./event-page/EventPage";
+import React, { useState, useEffect, createContext, useContext } from "react";
+import { SignUp } from "./signup/SignUp";
+import { SignIn } from "./signin/SignIn";
+import { Checkout } from "./checkout/Checkout";
 
 export interface sessionContextType {
   permission: number;
@@ -16,38 +16,40 @@ export const sessionContext = React.createContext<sessionContextType | null>(
   null
 );
 
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Catalog />,
-//   },
-//   {
-//     path: "/user",
-//     element: <UserSpace />,
-//   },
-//   {
-//     path: "/eventform",
-//     element: <EventForm />,
-//   },
-//   {
-//     path: "/success",
-//     element: <SuccessPage />,
-//   },
-// ]);
+export interface NavigationContextType {
+  navigateTo: (newRoute: string) => void;
+}
+
+const NavigationContext = createContext<NavigationContextType | null>(null);
+
+export const useNavigation = () => useContext(NavigationContext);
 
 function App() {
-  const [permission, setPermission] = useState(0);
+  const [route, setRoute] = useState("/signin");
+  useEffect(() => {
+    window.onpopstate = () => {
+      setRoute(window.location.pathname);
+    };
+  }, []);
 
-  const providerValues: sessionContextType = {
-    permission,
-    setPermission,
+  const navigateTo = (newRoute: string) => {
+    setRoute(newRoute);
+    window.history.pushState({}, "", newRoute);
+  };
+  const navigationValues: NavigationContextType = {
+    navigateTo: navigateTo,
   };
 
+  //TODO: navigation through URL input
+
   return (
-    <sessionContext.Provider value={providerValues}>
-      {/* <RouterProvider router={router} /> */}
-      <Catalog />
-    </sessionContext.Provider>
+    <NavigationContext.Provider value={navigationValues}>
+      {route === "/signin" && <SignIn />}
+      {route === "/signup" && <SignUp />}
+      {route === "/event-page" && <EventPage />}
+      {route === "/catalog" && <Catalog />}
+      {route === "/checkout" && <Checkout />}
+    </NavigationContext.Provider>
   );
 }
 
