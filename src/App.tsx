@@ -36,6 +36,21 @@ function App() {
     };
   }, []);
 
+  useEffect(() => {
+    const currentPath = window.location.pathname;
+    setRoute(currentPath.split("/").pop() || "signin");
+  }, []);
+
+  //TODO: dont let the user get to pages that need data from previous pages
+
+  useEffect(() => {
+    window.addEventListener("popstate", () => {
+      setRoute(window.location.pathname.split("/").pop() || "signin");
+
+      console.log("URL changed:", window.location.href);
+    });
+  }, []);
+
   const navigateTo = (newRoute: string) => {
     setRoute(newRoute);
     const componentPostfix = newRoute;

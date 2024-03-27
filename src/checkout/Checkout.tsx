@@ -9,7 +9,7 @@ import {
 import { OrderSummaryList } from "./OrderSummary";
 import classes from "./Checkout.module.css";
 import "@mantine/core/styles.css";
-import bg from "./bg.svg";
+import bg from "./bg.png";
 
 import { useEffect, useState } from "react";
 
