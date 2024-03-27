@@ -38,7 +38,7 @@ function App() {
 
   const navigateTo = (newRoute: string) => {
     setRoute(newRoute);
-    window.history.pushState({}, "", newRoute);
+    //window.history.pushState({}, "", newRoute);
   };
   const navigationValues: NavigationContextType = {
     navigateTo: navigateTo,
