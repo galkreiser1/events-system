@@ -29,16 +29,10 @@ const NavigationContext = createContext<NavigationContextType | null>(null);
 export const useNavigation = () => useContext(NavigationContext);
 
 function App() {
-  const [route, setRoute] = useState("signin");
-  useEffect(() => {
-    window.onpopstate = () => {
-      setRoute(window.location.pathname);
-    };
-  }, []);
+  const [route, setRoute] = useState("");
 
   useEffect(() => {
-    const currentPath = window.location.pathname;
-    setRoute(currentPath.split("/").pop() || "signin");
+    navigateTo(window.location.pathname.split("/").pop() || "signin");
   }, []);
 
   //TODO: dont let the user get to pages that need data from previous pages
