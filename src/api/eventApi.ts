@@ -4,12 +4,16 @@ import {
   LOCAL_SERVER_URL,
   GET_ALL_EVENTS_PATH,
   CREATE_EVENT_PATH,
+  USERS_SERVER_URL,
 } from "../const";
+
+let is_local = false;
+const SERVER_URL = is_local ? LOCAL_SERVER_URL : USERS_SERVER_URL;
 
 export const EventApi = {
   getAllEvents: async (): Promise<any | APIStatus> => {
     try {
-      const res = await axios.get(LOCAL_SERVER_URL + GET_ALL_EVENTS_PATH, {
+      const res = await axios.get(SERVER_URL + GET_ALL_EVENTS_PATH, {
         headers: { admin: "admin" },
       });
 
@@ -24,7 +28,7 @@ export const EventApi = {
   },
   getEvent: async (eventId: string): Promise<any | APIStatus> => {
     try {
-      const res = await axios.get(`${LOCAL_SERVER_URL}/api/event/${eventId}`, {
+      const res = await axios.get(`${SERVER_URL}/api/event/${eventId}`, {
         headers: { admin: "admin" },
       });
 
@@ -39,13 +43,9 @@ export const EventApi = {
   },
   createEvent: async (event: any): Promise<APIStatus> => {
     try {
-      const res = await axios.post(
-        LOCAL_SERVER_URL + CREATE_EVENT_PATH,
-        event,
-        {
-          headers: { admin: "admin" },
-        }
-      );
+      const res = await axios.post(SERVER_URL + CREATE_EVENT_PATH, event, {
+        headers: { admin: "admin" },
+      });
 
       if (res.status === 201) {
         return APIStatus.Success;
@@ -62,7 +62,7 @@ export const EventApi = {
   ): Promise<any | APIStatus> => {
     try {
       const res = await axios.put(
-        `${LOCAL_SERVER_URL}/api/event/${eventId}/date`,
+        `${SERVER_URL}/api/event/${eventId}/date`,
         eventData,
         {
           headers: { admin: "admin" },
@@ -84,7 +84,7 @@ export const EventApi = {
   ): Promise<any | APIStatus> => {
     try {
       const res = await axios.put(
-        `${LOCAL_SERVER_URL}/api/event/${eventId}/ticket`,
+        `${SERVER_URL}/api/event/${eventId}/ticket`,
         ticketData,
         {
           headers: { admin: "admin" },

@@ -46,7 +46,7 @@ import { useState, useEffect } from "react";
 // ];
 
 export function Catalog() {
-  const [events, setEvents] = useState<Event[]>([]);
+  const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 

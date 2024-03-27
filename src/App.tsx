@@ -7,6 +7,10 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { SignUp } from "./signup/SignUp";
 import { SignIn } from "./signin/SignIn";
 import { Checkout } from "./checkout/Checkout";
+// import { Catalog } from "./components/catalog/catalog";
+// import { UserSpace } from "./components/userspace/UserSpace";
+// import { SuccessPage } from "./success_page/SuccessPage";
+// import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 export interface sessionContextType {
   permission: number;
