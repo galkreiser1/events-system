@@ -37,7 +37,7 @@ export function Tickets() {
     console.log(
       `Buying ${numOfTickets} tickets for ${TicketsData[index].type}`
     );
-    navigator?.navigateTo("/checkout");
+    navigator?.navigateTo("checkout");
   };
 
   return (

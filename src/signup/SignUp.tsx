@@ -76,7 +76,7 @@ export function SignUp() {
   };
 
   const handleSignin = () => {
-    navigator?.navigateTo("/signin");
+    navigator?.navigateTo("signin");
   };
 
   if (isLoading) {

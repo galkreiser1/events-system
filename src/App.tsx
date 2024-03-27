@@ -29,7 +29,7 @@ const NavigationContext = createContext<NavigationContextType | null>(null);
 export const useNavigation = () => useContext(NavigationContext);
 
 function App() {
-  const [route, setRoute] = useState("/signin");
+  const [route, setRoute] = useState("signin");
   useEffect(() => {
     window.onpopstate = () => {
       setRoute(window.location.pathname);
@@ -38,7 +38,10 @@ function App() {
 
   const navigateTo = (newRoute: string) => {
     setRoute(newRoute);
-    //window.history.pushState({}, "", newRoute);
+    const componentPostfix = newRoute;
+    const currentPath = window.location.pathname;
+    const newPath = currentPath.replace(/\/[^/]*$/, `/${componentPostfix}`);
+    window.history.pushState({}, "", newPath);
   };
   const navigationValues: NavigationContextType = {
     navigateTo: navigateTo,
@@ -48,11 +51,11 @@ function App() {
 
   return (
     <NavigationContext.Provider value={navigationValues}>
-      {route === "/signin" && <SignIn />}
-      {route === "/signup" && <SignUp />}
-      {route === "/event-page" && <EventPage />}
-      {route === "/catalog" && <Catalog />}
-      {route === "/checkout" && <Checkout />}
+      {route === "signin" && <SignIn />}
+      {route === "signup" && <SignUp />}
+      {route === "catalog" && <Catalog />}
+      {route === "event-page" && <EventPage />}
+      {route === "checkout" && <Checkout />}
     </NavigationContext.Provider>
   );
 }

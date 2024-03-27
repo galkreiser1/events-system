@@ -39,7 +39,7 @@ export function SignIn() {
   };
 
   const handleSignup = () => {
-    navigator?.navigateTo("/signup");
+    navigator?.navigateTo("signup");
   };
 
   const handleLogin = async () => {
@@ -57,7 +57,7 @@ export function SignIn() {
     if (res === APIStatus.Success) {
       setErrorMessage("");
 
-      navigator?.navigateTo("/event-page");
+      navigator?.navigateTo("event-page");
       return;
     }
     if (res === APIStatus.BadRequest) {
