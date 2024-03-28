@@ -4,6 +4,7 @@ import "./UserSpace.css";
 import { useEffect, useState } from "react";
 import { OrderApi } from "../../api/orderApi";
 import { APIStatus } from "../../types";
+import { useNavigation } from "../../App";
 
 // const orders = [
 //   {
@@ -52,9 +53,11 @@ export function UserSpace() {
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
 
+  const navigator = useNavigation();
+
   useEffect(() => {
     const fetchData = async () => {
-      const result = await OrderApi.getUserOrders("65fdc533e9d05e598772329f");
+      const result = await OrderApi.getUserOrders();
       if (typeof result === "number") {
         setLoading(false);
         switch (result) {
@@ -63,7 +66,7 @@ export function UserSpace() {
             break;
           case APIStatus.Unauthorized:
             setError("Unauthorized");
-            // redirect to login
+            navigator?.navigateTo("signin");
             return;
           default:
             setError("Server error");

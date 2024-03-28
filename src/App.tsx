@@ -7,8 +7,8 @@ import React, { useState, useEffect, createContext, useContext } from "react";
 import { SignUp } from "./signup/SignUp";
 import { SignIn } from "./signin/SignIn";
 import { Checkout } from "./checkout/Checkout";
-// import { Catalog } from "./components/catalog/catalog";
-// import { UserSpace } from "./components/userspace/UserSpace";
+import { UserSpace } from "./components/userspace/UserSpace";
+import { EventForm } from "./components/eventform/eventform";
 // import { SuccessPage } from "./success_page/SuccessPage";
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -76,6 +76,8 @@ function App() {
         {route === "catalog" && <Catalog />}
         {route === "event-page" && <EventPage />}
         {route === "checkout" && <Checkout />}
+        {route === "userspace" && <UserSpace />}
+        {route === "eventform" && <EventForm />}
       </NavigationContext.Provider>
     </sessionContext.Provider>
   );

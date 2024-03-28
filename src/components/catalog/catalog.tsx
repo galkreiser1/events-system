@@ -73,7 +73,7 @@ export function Catalog() {
             break;
           case APIStatus.Unauthorized:
             setError("Unauthorized");
-            // redirect to login
+            navigator?.navigateTo("signin");
             return;
           default:
             setError("Server error");
@@ -100,8 +100,8 @@ export function Catalog() {
             setError("Server error");
             break;
           case APIStatus.Unauthorized:
-            setError("Unauthorized");
-            // redirect to login
+            setError("Unauthorized, redirecting to login...");
+            navigator?.navigateTo("signin");
             return;
           default:
             setError("Server error");

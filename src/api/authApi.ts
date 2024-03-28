@@ -34,8 +34,8 @@ export const AuthApi = {
       } else {
         return handleError(response.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 
@@ -61,8 +61,8 @@ export const AuthApi = {
         }
         return handleError(response.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 
@@ -76,12 +76,13 @@ export const AuthApi = {
         return APIStatus.Success;
       }
       return handleError(response.status);
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
   getUserName: async (): Promise<string | APIStatus> => {
     try {
+      console.log("get username");
       const response = await fetch(SERVER_URL + USERNAME_PATH, {
         method: "GET",
         credentials: "include",
@@ -95,8 +96,8 @@ export const AuthApi = {
         return JSON.stringify(userInfo);
       }
       return handleError(response.status);
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 };

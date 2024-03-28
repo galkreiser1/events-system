@@ -22,8 +22,8 @@ export const EventApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
   getEvent: async (eventId: string): Promise<any | APIStatus> => {
@@ -37,8 +37,8 @@ export const EventApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
   createEvent: async (event: any): Promise<APIStatus> => {
@@ -52,8 +52,8 @@ export const EventApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
   updateEventDate: async (
@@ -74,8 +74,8 @@ export const EventApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
   updateEventTicket: async (
@@ -96,8 +96,8 @@ export const EventApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 };

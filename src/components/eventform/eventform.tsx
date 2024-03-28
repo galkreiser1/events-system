@@ -13,12 +13,49 @@ import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DatePickerInput } from "@mantine/dates";
 import "@mantine/dates/styles.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { EventApi } from "../../api/eventApi";
+import { AuthApi } from "../../api/authApi";
+import { APIStatus } from "../../types";
+import { useNavigation } from "../../App";
 
 dayjs.extend(customParseFormat);
 
 export function EventForm() {
+  const [loading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
+  const navigator = useNavigation();
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let result: any = await AuthApi.getUserName();
+      result = JSON.parse(result);
+      if (typeof result === "number") {
+        setLoading(false);
+        switch (result) {
+          case APIStatus.ServerError:
+            setError("Server error");
+            break;
+          case APIStatus.Unauthorized:
+            setError("Unauthorized");
+            navigator?.navigateTo("signin");
+            break;
+          default:
+            setError("Server error");
+            break;
+        }
+      } else {
+        setLoading(false);
+        if (!result || result.permission === "U") {
+          setError("Unauthorized");
+          navigator?.navigateTo("catalog");
+        }
+      }
+    };
+    setError("");
+    fetchData();
+  }, []);
+
   const form = useForm({
     initialValues: {
       title: "",
@@ -135,6 +172,14 @@ export function EventForm() {
       console.error(e);
     }
   };
+
+  if (loading) {
+    return <h1>Loading...</h1>;
+  }
+
+  if (error) {
+    return <div>Error: {error}</div>;
+  }
 
   return (
     <>

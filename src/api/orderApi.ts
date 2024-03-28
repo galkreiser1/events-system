@@ -21,14 +21,14 @@ export const OrderApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
-  getUserOrders: async (userId: string): Promise<any | APIStatus> => {
+  getUserOrders: async (): Promise<any | APIStatus> => {
     try {
-      const res = await axios.get(`${SERVER_URL}/api/order/${userId}`, {
-        headers: { admin: "admin" },
+      const res = await axios.get(`${SERVER_URL}/api/order`, {
+        withCredentials: true,
       });
 
       if (res.status === 200) {
@@ -36,8 +36,8 @@ export const OrderApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
   getUsersByEvent: async (eventId: string): Promise<any | APIStatus> => {
@@ -51,8 +51,8 @@ export const OrderApi = {
       } else {
         return handleError(res.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 };
