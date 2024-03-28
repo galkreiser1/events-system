@@ -88,7 +88,11 @@ export const AuthApi = {
       });
       if (response.ok) {
         const data = await response.json();
-        return data.username;
+        const userInfo = {
+          username: data.username,
+          permission: data.permission,
+        };
+        return JSON.stringify(userInfo);
       }
       return handleError(response.status);
     } catch (e) {

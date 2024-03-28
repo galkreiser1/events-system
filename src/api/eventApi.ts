@@ -14,7 +14,7 @@ export const EventApi = {
   getAllEvents: async (): Promise<any | APIStatus> => {
     try {
       const res = await axios.get(SERVER_URL + GET_ALL_EVENTS_PATH, {
-        headers: { admin: "admin" },
+        withCredentials: true,
       });
 
       if (res.status === 200) {

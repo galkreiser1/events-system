@@ -13,8 +13,8 @@ import { Checkout } from "./checkout/Checkout";
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 export interface sessionContextType {
-  permission: number;
-  setPermission: React.Dispatch<React.SetStateAction<number>>;
+  permission: string;
+  setPermission: React.Dispatch<React.SetStateAction<string>>;
 }
 export const sessionContext = React.createContext<sessionContextType | null>(
   null
@@ -30,6 +30,11 @@ export const useNavigation = () => useContext(NavigationContext);
 
 function App() {
   const [route, setRoute] = useState("");
+  const [permission, setPermission] = useState("U");
+
+  useEffect(() => {
+    setPermission("U");
+  }, []);
 
   useEffect(() => {
     navigateTo(window.location.pathname.split("/").pop() || "signin");
@@ -56,16 +61,23 @@ function App() {
     navigateTo: navigateTo,
   };
 
+  const sessionValues: sessionContextType = {
+    permission,
+    setPermission,
+  };
+
   //TODO: navigation through URL input
 
   return (
-    <NavigationContext.Provider value={navigationValues}>
-      {route === "signin" && <SignIn />}
-      {route === "signup" && <SignUp />}
-      {route === "catalog" && <Catalog />}
-      {route === "event-page" && <EventPage />}
-      {route === "checkout" && <Checkout />}
-    </NavigationContext.Provider>
+    <sessionContext.Provider value={sessionValues}>
+      <NavigationContext.Provider value={navigationValues}>
+        {route === "signin" && <SignIn />}
+        {route === "signup" && <SignUp />}
+        {route === "catalog" && <Catalog />}
+        {route === "event-page" && <EventPage />}
+        {route === "checkout" && <Checkout />}
+      </NavigationContext.Provider>
+    </sessionContext.Provider>
   );
 }
 

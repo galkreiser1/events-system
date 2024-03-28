@@ -1,10 +1,11 @@
-import { SimpleGrid, Container } from "@mantine/core";
+import { SimpleGrid, Container, Button } from "@mantine/core";
 import "./catalog.css";
 import { EventApi } from "../../api/eventApi";
 import { APIStatus } from "../../types";
-
+import { AuthApi } from "../../api/authApi";
 import { EventCard } from "./eventcard/eventcard";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
+import { useNavigation, sessionContext } from "../../App";
 
 // const mockdata = [
 //   {
@@ -49,6 +50,17 @@ export function Catalog() {
   const [events, setEvents] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const navigator = useNavigation();
+  const context = useContext(sessionContext);
+
+  const handleLogOut = async () => {
+    try {
+      await AuthApi.logout();
+    } catch (e) {
+      console.log(e);
+    }
+    navigator?.navigateTo("signin");
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -73,6 +85,33 @@ export function Catalog() {
       }
     };
 
+    setError("");
+    fetchData();
+  }, []);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      let result: any = await AuthApi.getUserName();
+      result = JSON.parse(result);
+      if (typeof result === "number") {
+        setLoading(false);
+        switch (result) {
+          case APIStatus.ServerError:
+            setError("Server error");
+            break;
+          case APIStatus.Unauthorized:
+            setError("Unauthorized");
+            // redirect to login
+            return;
+          default:
+            setError("Server error");
+            break;
+        }
+      } else {
+        setLoading(false);
+        context?.setPermission(result?.permission || "U");
+      }
+    };
     setError("");
     fetchData();
   }, []);
@@ -112,6 +151,7 @@ export function Catalog() {
   return (
     <Container py="xl">
       <SimpleGrid cols={{ base: 1, sm: 3 }}>{cards}</SimpleGrid>
+      <Button onClick={handleLogOut}>Logout</Button>
     </Container>
   );
 }
