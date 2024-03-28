@@ -5,10 +5,10 @@ import {
   GET_ALL_EVENTS_PATH,
   CREATE_EVENT_PATH,
   USERS_SERVER_URL,
+  IS_LOCAL,
 } from "../const";
 
-let is_local = false;
-const SERVER_URL = is_local ? LOCAL_SERVER_URL : USERS_SERVER_URL;
+const SERVER_URL = IS_LOCAL ? LOCAL_SERVER_URL : USERS_SERVER_URL;
 
 export const EventApi = {
   getAllEvents: async (): Promise<any | APIStatus> => {
