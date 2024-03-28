@@ -3,8 +3,10 @@
 import React, { useState } from "react";
 import { ScrollArea, Title, Button, Text, NumberInput } from "@mantine/core";
 import classes from "./Tickets.module.css";
+import { useNavigation } from "../../App";
 
 export function Tickets() {
+  const navigator = useNavigation();
   const TicketsData = [
     { type: "Regular", price: 20, available: 100 },
     { type: "VIP", price: 50, available: 50 },
@@ -35,6 +37,7 @@ export function Tickets() {
     console.log(
       `Buying ${numOfTickets} tickets for ${TicketsData[index].type}`
     );
+    navigator?.navigateTo("checkout");
   };
 
   return (

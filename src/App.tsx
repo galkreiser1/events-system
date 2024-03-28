@@ -1,13 +1,16 @@
 import "./App.css";
 import "@mantine/core/styles.css";
-import React from "react";
-import { useState } from "react";
 // import { EventForm } from "./components/eventform/eventform";
+import { Catalog } from "./components/catalog/catalog";
+import { EventPage } from "./event-page/EventPage";
+import React, { useState, useEffect, createContext, useContext } from "react";
+import { SignUp } from "./signup/SignUp";
+import { SignIn } from "./signin/SignIn";
+import { Checkout } from "./checkout/Checkout";
 // import { Catalog } from "./components/catalog/catalog";
 // import { UserSpace } from "./components/userspace/UserSpace";
 // import { SuccessPage } from "./success_page/SuccessPage";
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
-import { EventPage } from "./event-page/EventPage";
 
 export interface sessionContextType {
   permission: number;
@@ -17,38 +20,52 @@ export const sessionContext = React.createContext<sessionContextType | null>(
   null
 );
 
-// const router = createBrowserRouter([
-//   {
-//     path: "/",
-//     element: <Catalog />,
-//   },
-//   {
-//     path: "/user",
-//     element: <UserSpace />,
-//   },
-//   {
-//     path: "/eventform",
-//     element: <EventForm />,
-//   },
-//   {
-//     path: "/success",
-//     element: <SuccessPage />,
-//   },
-// ]);
+export interface NavigationContextType {
+  navigateTo: (newRoute: string) => void;
+}
+
+const NavigationContext = createContext<NavigationContextType | null>(null);
+
+export const useNavigation = () => useContext(NavigationContext);
 
 function App() {
-  const [permission, setPermission] = useState(0);
+  const [route, setRoute] = useState("");
 
-  const providerValues: sessionContextType = {
-    permission,
-    setPermission,
+  useEffect(() => {
+    navigateTo(window.location.pathname.split("/").pop() || "signin");
+  }, []);
+
+  //TODO: dont let the user get to pages that need data from previous pages
+
+  useEffect(() => {
+    window.addEventListener("popstate", () => {
+      setRoute(window.location.pathname.split("/").pop() || "signin");
+
+      console.log("URL changed:", window.location.href);
+    });
+  }, []);
+
+  const navigateTo = (newRoute: string) => {
+    setRoute(newRoute);
+    const componentPostfix = newRoute;
+    const currentPath = window.location.pathname;
+    const newPath = currentPath.replace(/\/[^/]*$/, `/${componentPostfix}`);
+    window.history.pushState({}, "", newPath);
+  };
+  const navigationValues: NavigationContextType = {
+    navigateTo: navigateTo,
   };
 
+  //TODO: navigation through URL input
+
   return (
-    <sessionContext.Provider value={providerValues}>
-      {/* <RouterProvider router={router}> */}
-      <EventPage />
-    </sessionContext.Provider>
+    <NavigationContext.Provider value={navigationValues}>
+      {route === "signin" && <SignIn />}
+      {route === "signup" && <SignUp />}
+      {route === "catalog" && <Catalog />}
+      {route === "event-page" && <EventPage />}
+      {route === "checkout" && <Checkout />}
+    </NavigationContext.Provider>
   );
 }
 

@@ -18,6 +18,7 @@ const SERVER_URL = IS_LOCAL ? LOCAL_SERVER_URL : USERS_SERVER_URL;
 
 export const AuthApi = {
   login: async ({ username, password }: Credentials): Promise<APIStatus> => {
+    const permission = "U";
     try {
       const response = await fetch(SERVER_URL + LOGIN_PATH, {
         method: "POST",
@@ -25,7 +26,7 @@ export const AuthApi = {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ username, password }),
+        body: JSON.stringify({ username, password, permission }),
       });
 
       if (response.ok) {
