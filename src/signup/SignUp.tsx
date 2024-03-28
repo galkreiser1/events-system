@@ -59,7 +59,7 @@ export function SignUp() {
     setIsLoading(false);
 
     if (res === APIStatus.Success) {
-      navigator?.navigateTo("/signin");
+      navigator?.navigateTo("signin");
 
       return;
     }
