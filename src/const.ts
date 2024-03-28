@@ -1,4 +1,5 @@
 export const LOCAL_SERVER_URL = "http://localhost:3000";
+export const IS_LOCAL = false;
 
 /* AUTH/USERS */
 
