@@ -57,7 +57,7 @@ export function SignIn() {
     if (res === APIStatus.Success) {
       setErrorMessage("");
 
-      navigator?.navigateTo("event-page");
+      navigator?.navigateTo("catalog");
       return;
     }
     if (res === APIStatus.BadRequest) {

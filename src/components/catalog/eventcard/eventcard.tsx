@@ -23,8 +23,8 @@ export function EventCard({
 }: EventCardProps) {
   const context = React.useContext(sessionContext);
   let buttonText = "Buy Now";
-  const permission = context?.permission || 0;
-  if (permission > 0) {
+  const permission = context?.permission || "U";
+  if (permission !== "U") {
     buttonText = "Edit Event";
   }
   return (
@@ -47,7 +47,7 @@ export function EventCard({
           {date.toLocaleDateString("en-GB")}
         </Text>
 
-        {context?.permission == 0 && (
+        {permission === "U" && (
           <Text mt="md">Starting from: {start_price}$</Text>
         )}
         <Text mt="md" c="dimmed">

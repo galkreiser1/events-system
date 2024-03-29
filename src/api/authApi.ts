@@ -5,6 +5,8 @@ import {
   LOGOUT_PATH,
   SIGNUP_PATH,
   USERNAME_PATH,
+  LOCAL_SERVER_URL,
+  IS_LOCAL,
 } from "../const";
 
 interface Credentials {
@@ -12,11 +14,13 @@ interface Credentials {
   password: string;
 }
 
+const SERVER_URL = IS_LOCAL ? LOCAL_SERVER_URL : USERS_SERVER_URL;
+
 export const AuthApi = {
   login: async ({ username, password }: Credentials): Promise<APIStatus> => {
     const permission = "U";
     try {
-      const response = await fetch(USERS_SERVER_URL + LOGIN_PATH, {
+      const response = await fetch(SERVER_URL + LOGIN_PATH, {
         method: "POST",
         credentials: "include",
         headers: {
@@ -30,14 +34,14 @@ export const AuthApi = {
       } else {
         return handleError(response.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 
   signUp: async ({ username, password }: Credentials): Promise<APIStatus> => {
     try {
-      const response = await fetch(USERS_SERVER_URL + SIGNUP_PATH, {
+      const response = await fetch(SERVER_URL + SIGNUP_PATH, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -57,14 +61,14 @@ export const AuthApi = {
         }
         return handleError(response.status);
       }
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 
   logout: async (): Promise<APIStatus> => {
     try {
-      const response = await fetch(USERS_SERVER_URL + LOGOUT_PATH, {
+      const response = await fetch(SERVER_URL + LOGOUT_PATH, {
         method: "POST",
         credentials: "include",
       });
@@ -72,23 +76,28 @@ export const AuthApi = {
         return APIStatus.Success;
       }
       return handleError(response.status);
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
   getUserName: async (): Promise<string | APIStatus> => {
     try {
-      const response = await fetch(USERS_SERVER_URL + USERNAME_PATH, {
+      console.log("get username");
+      const response = await fetch(SERVER_URL + USERNAME_PATH, {
         method: "GET",
         credentials: "include",
       });
       if (response.ok) {
         const data = await response.json();
-        return data.username;
+        const userInfo = {
+          username: data.username,
+          permission: data.permission,
+        };
+        return JSON.stringify(userInfo);
       }
       return handleError(response.status);
-    } catch (e) {
-      return handleError(e);
+    } catch (e: any) {
+      return handleError(e.response.status);
     }
   },
 };
