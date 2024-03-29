@@ -21,3 +21,11 @@ export const ORDERS_SERVER_URL = "https://events-system-order.onrender.com";
 export const CREATE_ORDER_PATH = "/api/order";
 export const GET_USER_ORDERS_PATH = "/api/order/:userId";
 export const GET_USERS_BY_EVENT_PATH = "/api/order/users/:eventId";
+
+/* COMMENTS */
+
+export const COMMENTS_SERVER_URL =
+  "https://events-system-comments.onrender.com/";
+export const CREATE_COMMENT_PATH = "/api/comment";
+export const GET_COMMENTS_BY_EVENT_PATH = "/api/comment/:eventId/:page";
+export const GET_NUM_OF_COMMENTS_BY_EVENT_PATH = "/api/comment/:eventId/num";
