@@ -111,6 +111,7 @@ export function Catalog() {
       } else {
         setLoading(false);
         context?.setPermission(result?.permission || "U");
+        context?.setUsername(result?.username || "");
       }
     };
     setError("");
@@ -139,6 +140,7 @@ export function Catalog() {
     return (
       <EventCard
         key={index}
+        id={event._id}
         title={event.title}
         image={event.image}
         date={new Date(event.start_date)}
