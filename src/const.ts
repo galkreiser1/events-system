@@ -2,7 +2,6 @@ export const LOCAL_SERVER_URL = "http://localhost:3000";
 export const IS_LOCAL = false;
 
 /* AUTH/USERS */
-
 export const LOGIN_PATH = "/api/login";
 export const LOGOUT_PATH = "/api/logout";
 export const SIGNUP_PATH = "/api/signup";

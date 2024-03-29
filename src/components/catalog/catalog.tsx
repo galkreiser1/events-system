@@ -6,6 +6,7 @@ import { AuthApi } from "../../api/authApi";
 import { EventCard } from "./eventcard/eventcard";
 import { useState, useEffect, useContext } from "react";
 import { useNavigation, sessionContext } from "../../App";
+import { Loader } from "../../loader/Loader";
 
 // const mockdata = [
 //   {
@@ -117,7 +118,7 @@ export function Catalog() {
   }, []);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   if (error) {
