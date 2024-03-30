@@ -4,24 +4,27 @@ import {
   CREATE_COMMENT_PATH,
   GET_COMMENTS_BY_EVENT_PATH,
   GET_NUM_OF_COMMENTS_BY_EVENT_PATH,
-  COMMENTS_SERVER_URL,
+  API_GATEWAY_URL,
 } from "../const";
 
 // TODO: errors
+
 export const commentApi = {
   createComment: async (comment: any): Promise<APIStatus> => {
     try {
       const res = await axios.post(
-        COMMENTS_SERVER_URL + CREATE_COMMENT_PATH,
+        API_GATEWAY_URL + CREATE_COMMENT_PATH,
         comment
       );
 
       if (res.status === 201) {
         return APIStatus.Success;
       } else {
+        console.log(res);
         return handleError(res.status);
       }
     } catch (e) {
+      console.log("failed to axios.post from frontend commentApi", e);
       return handleError(e);
     }
   },
@@ -32,10 +35,11 @@ export const commentApi = {
   ): Promise<any | APIStatus> => {
     try {
       const res = await axios.get(
-        `${COMMENTS_SERVER_URL}${GET_COMMENTS_BY_EVENT_PATH.replace(
-          ":eventId",
-          eventId
-        ).replace(":page", page.toString())}`
+        API_GATEWAY_URL +
+          GET_COMMENTS_BY_EVENT_PATH.replace(":eventId", eventId).replace(
+            ":page",
+            page.toString()
+          )
       );
 
       if (res.status === 200) {
@@ -53,10 +57,8 @@ export const commentApi = {
   ): Promise<number | APIStatus> => {
     try {
       const res = await axios.get(
-        `${COMMENTS_SERVER_URL}${GET_NUM_OF_COMMENTS_BY_EVENT_PATH.replace(
-          ":eventId",
-          eventId
-        )}`
+        API_GATEWAY_URL +
+          GET_NUM_OF_COMMENTS_BY_EVENT_PATH.replace(":eventId", eventId)
       );
 
       if (res.status === 200) {

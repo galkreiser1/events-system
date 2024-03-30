@@ -2,35 +2,60 @@
 import React, { useState } from "react";
 import { Textarea, Button } from "@mantine/core";
 import "./CommentForm.css";
+import { commentType } from "../../../types";
+import { commentFormType } from "../../../types";
+import { commentApi } from "../../../api/commentApi";
 
-type commentFormType = {
-  setComment: (comment: string) => void;
-  comment: string;
-  close: () => void;
-};
+// type commentFormType = {
+//   setComment: (comment: string) => void;
+//   comment: string;
+//   close: () => void;
+// };
 
-export function CommentForm({ setComment, comment, close }: commentFormType) {
+// type commentType = {
+//   event_id: number;
+//   username: string;
+//   comment: string;
+//   date: Date;
+// };
+
+export function CommentForm({
+  setNewComment,
+  newComment,
+  close,
+}: commentFormType) {
   const maxCommentLength = 100;
-  const displayError = comment.length > maxCommentLength;
+  const displayError = newComment.length > maxCommentLength;
+
+  const handlePostComment = async (commentText: string) => {
+    if (commentText.length === 0 || displayError) return;
+    const date = new Date();
+
+    const commentData: commentType = {
+      event_id: "1", //take from context
+      username: "Guest", //take from context
+      text: commentText,
+      date: date.toString(),
+    };
+    close();
+    setNewComment("");
+    await commentApi.createComment(commentData);
+
+    console.log(commentData);
+  };
   return (
     <div>
       <Textarea
         label="Add your comment to the event:"
         placeholder={`${maxCommentLength} chars max`}
-        value={comment}
-        onChange={(event) => setComment(event.currentTarget.value)}
+        value={newComment}
+        onChange={(event) => setNewComment(event.currentTarget.value)}
         size="md"
         error={displayError ? "Max comment length is 100 chars" : ""}
       />
       <div className="button-container">
         <Button
-          onClick={() => {
-            if (comment.length === 0 || displayError) return;
-            close();
-            const date = new Date();
-            console.log(comment, date);
-            setComment("");
-          }}
+          onClick={() => handlePostComment(newComment)}
           mt={"lg"}
           color="rgb(100, 187, 221)"
           ta="center"

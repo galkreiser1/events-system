@@ -1,5 +1,6 @@
 export const LOCAL_SERVER_URL = "http://localhost:3000";
 export const IS_LOCAL = false;
+export const API_GATEWAY_URL = "https://events-system-users.onrender.com";
 
 /* AUTH/USERS */
 
@@ -26,7 +27,7 @@ export const GET_USERS_BY_EVENT_PATH = "/api/order/users/:eventId";
 /* COMMENTS */
 
 export const COMMENTS_SERVER_URL =
-  "https://events-system-comments.onrender.com/";
+  "https://events-system-comments.onrender.com";
 export const CREATE_COMMENT_PATH = "/api/comment";
 export const GET_COMMENTS_BY_EVENT_PATH = "/api/comment/:eventId/:page";
 export const GET_NUM_OF_COMMENTS_BY_EVENT_PATH = "/api/comment/:eventId/num";
