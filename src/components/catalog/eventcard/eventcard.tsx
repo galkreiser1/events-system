@@ -1,10 +1,11 @@
 import { Card, Image, Text, Group, Badge, Button } from "@mantine/core";
 import "./eventcard.css";
 import React from "react";
-import { sessionContext } from "../../../App";
+import { sessionContext, useNavigation } from "../../../App";
 // import { Link } from "react-router-dom";
 
 type EventCardProps = {
+  id: string;
   image: string;
   title: string;
   date: Date;
@@ -14,6 +15,7 @@ type EventCardProps = {
 };
 
 export function EventCard({
+  id,
   image,
   title,
   date,
@@ -22,11 +24,17 @@ export function EventCard({
   tickets_left,
 }: EventCardProps) {
   const context = React.useContext(sessionContext);
+  const navigator = useNavigation();
   let buttonText = "Buy Now";
   const permission = context?.permission || "U";
   if (permission !== "U") {
     buttonText = "Edit Event";
   }
+
+  const handleClick = () => {
+    context?.setEventId?.(id);
+    navigator?.navigateTo("eventpage");
+  };
   return (
     <Card withBorder radius="md" p="md" className="card">
       <Card.Section>
@@ -57,7 +65,7 @@ export function EventCard({
 
       <Group mt="auto">
         {/* <Link to="/success"> */}
-        <Button radius="md" style={{ flex: 1 }}>
+        <Button radius="md" style={{ flex: 1 }} onClick={handleClick}>
           {buttonText}
         </Button>
         {/* </Link> */}

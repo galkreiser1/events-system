@@ -3,7 +3,6 @@ export const IS_LOCAL = false;
 export const API_GATEWAY_URL = "https://events-system-users.onrender.com";
 
 /* AUTH/USERS */
-
 export const LOGIN_PATH = "/api/login";
 export const LOGOUT_PATH = "/api/logout";
 export const SIGNUP_PATH = "/api/signup";

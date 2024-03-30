@@ -18,6 +18,7 @@ import { EventApi } from "../../api/eventApi";
 import { AuthApi } from "../../api/authApi";
 import { APIStatus } from "../../types";
 import { useNavigation } from "../../App";
+import { Loader } from "../../loader/Loader";
 
 dayjs.extend(customParseFormat);
 
@@ -174,7 +175,7 @@ export function EventForm() {
   };
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   if (error) {

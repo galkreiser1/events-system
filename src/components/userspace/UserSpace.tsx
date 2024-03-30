@@ -5,6 +5,7 @@ import { useEffect, useState } from "react";
 import { OrderApi } from "../../api/orderApi";
 import { APIStatus } from "../../types";
 import { useNavigation } from "../../App";
+import { Loader } from "../../loader/Loader";
 
 // const orders = [
 //   {
@@ -83,7 +84,7 @@ export function UserSpace() {
   }, []);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   if (error) {
@@ -116,8 +117,10 @@ export function UserSpace() {
 
   return (
     <>
+      <Title mb="xl" ta="center">
+        Order History
+      </Title>
       <Container size="lg">
-        <Title mb="xl">Username</Title>
         <Table withTableBorder>
           <Table.Thead>
             <Table.Tr>

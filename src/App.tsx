@@ -15,6 +15,10 @@ import { EventForm } from "./components/eventform/eventform";
 export interface sessionContextType {
   permission: string;
   setPermission: React.Dispatch<React.SetStateAction<string>>;
+  username: string;
+  setUsername: React.Dispatch<React.SetStateAction<string>>;
+  eventId?: string;
+  setEventId?: React.Dispatch<React.SetStateAction<string>>;
 }
 export const sessionContext = React.createContext<sessionContextType | null>(
   null
@@ -29,8 +33,10 @@ const NavigationContext = createContext<NavigationContextType | null>(null);
 export const useNavigation = () => useContext(NavigationContext);
 
 function App() {
-  const [route, setRoute] = useState("");
-  const [permission, setPermission] = useState("U");
+  const [route, setRoute] = useState<string>("");
+  const [permission, setPermission] = useState<string>("U");
+  const [username, setUsername] = useState<string>("");
+  const [eventId, setEventId] = useState<string>("");
 
   useEffect(() => {
     setPermission("U");
@@ -64,6 +70,10 @@ function App() {
   const sessionValues: sessionContextType = {
     permission,
     setPermission,
+    username,
+    setUsername,
+    eventId,
+    setEventId,
   };
 
   //TODO: navigation through URL input

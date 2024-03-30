@@ -6,6 +6,7 @@ import { AuthApi } from "../../api/authApi";
 import { EventCard } from "./eventcard/eventcard";
 import { useState, useEffect, useContext } from "react";
 import { useNavigation, sessionContext } from "../../App";
+import { Loader } from "../../loader/Loader";
 
 // const mockdata = [
 //   {
@@ -110,6 +111,7 @@ export function Catalog() {
       } else {
         setLoading(false);
         context?.setPermission(result?.permission || "U");
+        context?.setUsername(result?.username || "");
       }
     };
     setError("");
@@ -117,7 +119,7 @@ export function Catalog() {
   }, []);
 
   if (loading) {
-    return <h1>Loading...</h1>;
+    return <Loader />;
   }
 
   if (error) {
@@ -138,6 +140,7 @@ export function Catalog() {
     return (
       <EventCard
         key={index}
+        id={event._id}
         title={event.title}
         image={event.image}
         date={new Date(event.start_date)}
