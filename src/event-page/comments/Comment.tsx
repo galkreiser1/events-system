@@ -13,6 +13,8 @@ import {
 import { useDisclosure } from "@mantine/hooks";
 import { CommentForm } from "./CommentForm/CommentForm";
 export function Comment({ eventData }: { eventData: any }) {
+  // const isUser = context.permissions == "U" ? true : false;
+
   const commentsData = [
     {
       From: "Benny",
@@ -33,7 +35,17 @@ export function Comment({ eventData }: { eventData: any }) {
     { From: "David", At: "2024-03-21T2030", Content: "I'm sure we will win!" },
   ];
   const [opened, { open, close }] = useDisclosure(false);
-  const [comment, setComment] = React.useState("");
+  const [newComment, setNewComment] = React.useState("");
+
+  // if (!isUser) {
+  // const event_id = eventSession.event_id;
+
+  //setIsLoading(true);
+  // const numOfComments = await getNumOfCommentsByEvent(event_id);
+  //setIsLoading(true);
+
+  //   return <Text> `total comments for the event: ${numOfComments}` </Text>
+  // }
 
   return (
     <div className={classes.comments_wrapper}>
@@ -63,7 +75,7 @@ export function Comment({ eventData }: { eventData: any }) {
         opened={opened}
         onClose={() => {
           close();
-          setComment("");
+          setNewComment("");
         }}
         title={eventData.title}
         size="md"
@@ -72,7 +84,11 @@ export function Comment({ eventData }: { eventData: any }) {
           blur: 3,
         }}
       >
-        <CommentForm setComment={setComment} comment={comment} close={close} />
+        <CommentForm
+          setNewComment={setNewComment}
+          newComment={newComment}
+          close={close}
+        />
       </Modal>
 
       <Button

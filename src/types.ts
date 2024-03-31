@@ -6,3 +6,15 @@ export enum APIStatus {
   ServerError,
   Conflict
 }
+export type commentType = {
+  event_id: string;
+  username: string;
+  text: string;
+  date: string;
+};
+
+export type commentFormType = {
+  setNewComment: (comment: string) => void;
+  newComment: string;
+  close: () => void;
+};

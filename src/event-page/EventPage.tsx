@@ -21,8 +21,6 @@ export function EventPage() {
     priceStarts: 20,
   };
 
-  // TODO: add comment button
-
   return (
     <div className={classes.page_container}>
       <div className={classes.top_wrapper}>

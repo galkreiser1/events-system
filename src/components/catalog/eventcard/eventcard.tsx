@@ -33,7 +33,7 @@ export function EventCard({
 
   const handleClick = () => {
     context?.setEventId?.(id);
-    navigator?.navigateTo("eventpage");
+    navigator?.navigateTo("event-page");
   };
   return (
     <Card withBorder radius="md" p="md" className="card">
