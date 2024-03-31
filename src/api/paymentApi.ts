@@ -82,7 +82,7 @@ const handleError = async (e: unknown): Promise<APIStatus> => {
 const handleErrorByStatusCode = (statusCode: number): APIStatus => {
   switch (statusCode) {
     case 400:
-      return APIStatus.BadRequest;
+      return APIStatus.AlreadyExists;
     case 401:
       return APIStatus.Unauthorized;
     case 409:

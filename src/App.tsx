@@ -9,6 +9,8 @@ import { SignIn } from "./signin/SignIn";
 import { Checkout } from "./checkout/Checkout";
 import { UserSpace } from "./components/userspace/UserSpace";
 import { EventForm } from "./components/eventform/eventform";
+import { UserBar } from "./components/userbar/UserBar";
+import { CouponForm } from "./components/couponform/couponform";
 // import { SuccessPage } from "./success_page/SuccessPage";
 // import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
@@ -19,6 +21,7 @@ export interface sessionContextType {
   setUsername: React.Dispatch<React.SetStateAction<string>>;
   eventId?: string;
   setEventId?: React.Dispatch<React.SetStateAction<string>>;
+  route: string;
 }
 export const sessionContext = React.createContext<sessionContextType | null>(
   null
@@ -74,6 +77,7 @@ function App() {
     setUsername,
     eventId,
     setEventId,
+    route,
   };
 
   //TODO: navigation through URL input
@@ -81,6 +85,7 @@ function App() {
   return (
     <sessionContext.Provider value={sessionValues}>
       <NavigationContext.Provider value={navigationValues}>
+        {route !== "signin" && route !== "signup" && <UserBar />}
         {route === "signin" && <SignIn />}
         {route === "signup" && <SignUp />}
         {route === "catalog" && <Catalog />}
@@ -88,6 +93,7 @@ function App() {
         {route === "checkout" && <Checkout />}
         {route === "userspace" && <UserSpace />}
         {route === "eventform" && <EventForm />}
+        {route === "couponform" && <CouponForm />}
       </NavigationContext.Provider>
     </sessionContext.Provider>
   );

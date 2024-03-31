@@ -55,8 +55,11 @@ export function EventCard({
           {date.toLocaleDateString("en-GB")}
         </Text>
 
-        {permission === "U" && (
+        {tickets_left > 0 && permission === "U" && (
           <Text mt="md">Starting from: {start_price}$</Text>
+        )}
+        {tickets_left === 0 && permission === "U" && (
+          <Text mt="md">Sold Out</Text>
         )}
         <Text mt="md" c="dimmed">
           Tickets left: {tickets_left}

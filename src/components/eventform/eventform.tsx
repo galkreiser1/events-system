@@ -7,55 +7,29 @@ import {
   Button,
   NativeSelect,
   Container,
+  Notification,
+  rem,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
 import { DatePickerInput } from "@mantine/dates";
 import "@mantine/dates/styles.css";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { EventApi } from "../../api/eventApi";
-import { AuthApi } from "../../api/authApi";
-import { APIStatus } from "../../types";
-import { useNavigation } from "../../App";
 import { Loader } from "../../loader/Loader";
+import { IconX, IconCheck } from "@tabler/icons-react";
+import { APIStatus } from "../../types";
 
 dayjs.extend(customParseFormat);
 
 export function EventForm() {
-  const [loading, setLoading] = useState<boolean>(true);
+  const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>("");
-  const navigator = useNavigation();
-
-  useEffect(() => {
-    const fetchData = async () => {
-      let result: any = await AuthApi.getUserName();
-      result = JSON.parse(result);
-      if (typeof result === "number") {
-        setLoading(false);
-        switch (result) {
-          case APIStatus.ServerError:
-            setError("Server error");
-            break;
-          case APIStatus.Unauthorized:
-            setError("Unauthorized");
-            navigator?.navigateTo("signin");
-            break;
-          default:
-            setError("Server error");
-            break;
-        }
-      } else {
-        setLoading(false);
-        if (!result || result.permission === "U") {
-          setError("Unauthorized");
-          navigator?.navigateTo("catalog");
-        }
-      }
-    };
-    setError("");
-    fetchData();
-  }, []);
+  const [success, setSuccess] = useState<boolean>(false);
+  const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />;
+  const checkIcon = <IconCheck style={{ width: rem(20), height: rem(20) }} />;
+  // const navigator = useNavigation();
 
   const form = useForm({
     initialValues: {
@@ -166,25 +140,50 @@ export function EventForm() {
       return;
     }
     const combined_values = { ...values, tickets: inputs };
-    console.log(combined_values);
-    try {
-      await EventApi.createEvent(combined_values);
-    } catch (e) {
-      console.error(e);
+    combined_values.category = combined_values.category
+      ? combined_values.category
+      : "Charity Event";
+    setLoading(true);
+    const result = await EventApi.createEvent(combined_values);
+    if (result === APIStatus.Success) {
+      setSuccess(true);
+    } else {
+      setError("Server error");
     }
+    setLoading(false);
   };
 
   if (loading) {
     return <Loader />;
   }
 
-  if (error) {
-    return <div>Error: {error}</div>;
-  }
-
   return (
     <>
-      <Container size="sm">
+      <Container size="sm" mb="xl">
+        <Group justify="center" mb="xl">
+          {!success && error && (
+            <Notification
+              icon={xIcon}
+              color="red"
+              title={error}
+              onClick={() => {
+                setError("");
+              }}
+            ></Notification>
+          )}
+
+          {success && !error && (
+            <Notification
+              icon={checkIcon}
+              color="teal"
+              title="Event Created Successfully!"
+              mt="md"
+              onClick={() => {
+                setSuccess(false);
+              }}
+            ></Notification>
+          )}
+        </Group>
         <form
           onSubmit={form.onSubmit((values) => {
             handleSubmit(values);
