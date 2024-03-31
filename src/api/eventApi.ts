@@ -29,7 +29,7 @@ export const EventApi = {
   getEvent: async (eventId: string): Promise<any | APIStatus> => {
     try {
       const res = await axios.get(`${SERVER_URL}/api/event/${eventId}`, {
-        headers: { admin: "admin" },
+        withCredentials: true,
       });
 
       if (res.status === 200) {
@@ -44,7 +44,7 @@ export const EventApi = {
   createEvent: async (event: any): Promise<APIStatus> => {
     try {
       const res = await axios.post(SERVER_URL + CREATE_EVENT_PATH, event, {
-        headers: { admin: "admin" },
+        withCredentials: true,
       });
 
       if (res.status === 201) {
@@ -65,7 +65,7 @@ export const EventApi = {
         `${SERVER_URL}/api/event/${eventId}/date`,
         eventData,
         {
-          headers: { admin: "admin" },
+          withCredentials: true,
         }
       );
 
@@ -87,7 +87,7 @@ export const EventApi = {
         `${SERVER_URL}/api/event/${eventId}/ticket`,
         ticketData,
         {
-          headers: { admin: "admin" },
+          withCredentials: true,
         }
       );
 

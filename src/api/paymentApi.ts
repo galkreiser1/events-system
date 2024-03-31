@@ -1,18 +1,37 @@
 import { APIStatus } from "../types";
 import axios from "axios";
 import {
-  CREATE_ORDER_PATH,
-  USERS_SERVER_URL,
-  LOCAL_SERVER_URL,
+  CREATE_COUPON_PATH,
   IS_LOCAL,
+  LOCAL_SERVER_URL,
+  USERS_SERVER_URL,
+  BUY_PATH,
 } from "../const";
 
 const SERVER_URL = IS_LOCAL ? LOCAL_SERVER_URL : USERS_SERVER_URL;
 
-export const OrderApi = {
-  createOrder: async (order: any): Promise<APIStatus> => {
+export const PaymentApi = {
+  getCoupon: async (couponCode: string): Promise<any | APIStatus> => {
     try {
-      const res = await axios.post(SERVER_URL + CREATE_ORDER_PATH, order, {
+      const res = await axios.get(
+        SERVER_URL + `/api/payment/coupon/${couponCode}`,
+        {
+          withCredentials: true,
+        }
+      );
+
+      if (res.status === 200) {
+        return res.data;
+      } else {
+        return handleError(res.status);
+      }
+    } catch (e: any) {
+      return handleError(e.response.status);
+    }
+  },
+  createCoupon: async (coupon: any): Promise<APIStatus> => {
+    try {
+      const res = await axios.post(SERVER_URL + CREATE_COUPON_PATH, coupon, {
         withCredentials: true,
       });
 
@@ -25,29 +44,23 @@ export const OrderApi = {
       return handleError(e.response.status);
     }
   },
-  getUserOrders: async (): Promise<any | APIStatus> => {
+  Buy: async (
+    event: any,
+    ticket_type: string,
+    quantity: Number,
+    payment_details: any,
+    coupon_code = undefined
+  ): Promise<APIStatus> => {
     try {
-      const res = await axios.get(`${SERVER_URL}/api/order`, {
-        withCredentials: true,
-      });
-
-      if (res.status === 200) {
-        return res.data;
-      } else {
-        return handleError(res.status);
-      }
-    } catch (e: any) {
-      return handleError(e.response.status);
-    }
-  },
-  getUsersByEvent: async (eventId: string): Promise<any | APIStatus> => {
-    try {
-      const res = await axios.get(`${SERVER_URL}/api/order/users/${eventId}`, {
-        withCredentials: true,
-      });
-
-      if (res.status === 200) {
-        return res.data;
+      const res = await axios.post(
+        SERVER_URL + BUY_PATH,
+        { event, ticket_type, quantity, payment_details, coupon_code },
+        {
+          withCredentials: true,
+        }
+      );
+      if (res.status === 201) {
+        return APIStatus.Success;
       } else {
         return handleError(res.status);
       }
@@ -72,6 +85,8 @@ const handleErrorByStatusCode = (statusCode: number): APIStatus => {
       return APIStatus.BadRequest;
     case 401:
       return APIStatus.Unauthorized;
+    case 409:
+      return APIStatus.Conflict;
     case 500:
       return APIStatus.ServerError;
     default:

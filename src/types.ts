@@ -4,4 +4,5 @@ export enum APIStatus {
   Unauthorized,
   AlreadyExists,
   ServerError,
+  Conflict
 }

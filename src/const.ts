@@ -29,3 +29,8 @@ export const COMMENTS_SERVER_URL =
 export const CREATE_COMMENT_PATH = "/api/comment";
 export const GET_COMMENTS_BY_EVENT_PATH = "/api/comment/:eventId/:page";
 export const GET_NUM_OF_COMMENTS_BY_EVENT_PATH = "/api/comment/:eventId/num";
+
+/* PAYMENTS */
+export const CREATE_COUPON_PATH = "/api/payment/coupon";
+export const GET_COUPON_PATH = "/api/payment/coupon/:code";
+export const BUY_PATH = "/api/payment/buy";
