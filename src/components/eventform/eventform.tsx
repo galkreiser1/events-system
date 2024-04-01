@@ -13,7 +13,7 @@ import {
 import { useForm } from "@mantine/form";
 import dayjs from "dayjs";
 import customParseFormat from "dayjs/plugin/customParseFormat";
-import { DatePickerInput } from "@mantine/dates";
+import { DateTimePicker } from "@mantine/dates";
 import "@mantine/dates/styles.css";
 import { useState } from "react";
 import { EventApi } from "../../api/eventApi";
@@ -240,17 +240,15 @@ export function EventForm() {
           </SimpleGrid>
 
           <SimpleGrid cols={{ base: 1, sm: 2 }} mt="xl" mb="lg">
-            <DatePickerInput
-              valueFormat="DD/MM/YYYY HH:mm:ss"
+            <DateTimePicker
               label="Start Date"
-              placeholder="Date input"
+              placeholder="Pick date and time"
               {...form.getInputProps("start_date")}
             />
 
-            <DatePickerInput
-              valueFormat="DD/MM/YYYY HH:mm:ss"
+            <DateTimePicker
               label="End Date"
-              placeholder="Date input"
+              placeholder="Pick date and time"
               {...form.getInputProps("end_date")}
             />
           </SimpleGrid>
