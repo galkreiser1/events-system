@@ -46,12 +46,21 @@ export function UserSpace() {
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    navigator?.navigateTo("error-page");
   }
 
-  const rows = orders.map((order, index) => (
+  const rows = orders.map((order: any, index) => (
     <Table.Tr key={index} className="row">
-      <Table.Td>{order.checkout_date}</Table.Td>
+      <Table.Td>
+        {new Date(order.checkout_date).toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
+      </Table.Td>
       <Table.Td>{order.ticket_type}</Table.Td>
       <Table.Td>{order.quantity}</Table.Td>
       <Table.Td className="cell">

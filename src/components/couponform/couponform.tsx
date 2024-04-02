@@ -45,6 +45,9 @@ export function CouponForm() {
       case APIStatus.AlreadyExists:
         setError("Coupon already exists");
         break;
+      case APIStatus.Forbidden:
+        setError("Permission Denied");
+        break;
       default:
         setError("Server error");
         break;

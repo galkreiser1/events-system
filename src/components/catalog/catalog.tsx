@@ -6,6 +6,7 @@ import {
   RangeSlider,
   Grid,
   Text,
+  Loader,
 } from "@mantine/core";
 import "./catalog.css";
 import { EventApi } from "../../api/eventApi";
@@ -14,8 +15,9 @@ import { AuthApi } from "../../api/authApi";
 import { EventCard } from "./eventcard/eventcard";
 import { useState, useEffect, useContext } from "react";
 import { useNavigation, sessionContext } from "../../App";
-import { Loader } from "../../loader/Loader";
 import { GoArrowDown, GoArrowUp } from "react-icons/go";
+import InfiniteScroll from "react-infinite-scroll-component";
+import { Loader as LegacyLoader } from "../../loader/Loader";
 
 const getMaxPrice = (events: any) => {
   const cards = events.map((event: any) => {
@@ -61,33 +63,43 @@ export function Catalog() {
   const [value, setValue] = useState<[number, number]>([0, 1000]);
   const [endValue, setEndValue] = useState<[number, number]>([0, 1000]);
   const [maxValue, setMaxValue] = useState<number>(0);
+  const [page, setPage] = useState<number>(1);
+  const [hasMore, setHasMore] = useState<boolean>(true);
+
+  const handleResultError = (result: number) => {
+    switch (result) {
+      case APIStatus.ServerError:
+        setError("Server error");
+        break;
+      case APIStatus.Unauthorized:
+        navigator?.navigateTo("signin");
+        return;
+      default:
+        setError("Server error");
+        break;
+    }
+  };
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await EventApi.getAllEvents();
+      const result = await EventApi.getAllEvents(page);
       if (typeof result === "number") {
         setLoading(false);
-        switch (result) {
-          case APIStatus.ServerError:
-            setError("Server error");
-            break;
-          case APIStatus.Unauthorized:
-            setError("Unauthorized");
-            navigator?.navigateTo("signin");
-            return;
-          default:
-            setError("Server error");
-            break;
-        }
+        handleResultError(result);
       } else {
-        setEvents(result);
+        if (result.length === 0) {
+          setHasMore(false);
+        } else {
+          setEvents(result);
+          setPage(page + 1);
+        }
         setMaxValue(getMaxPrice(result));
         setValue([0, getMaxPrice(result)]);
         setLoading(false);
       }
     };
 
-    if (events.length === 0) {
+    if (events.length === 0 && hasMore) {
       setError("");
       fetchData();
     }
@@ -99,18 +111,7 @@ export function Catalog() {
       result = JSON.parse(result);
       if (typeof result === "number") {
         setLoading(false);
-        switch (result) {
-          case APIStatus.ServerError:
-            setError("Server error");
-            break;
-          case APIStatus.Unauthorized:
-            setError("Unauthorized, redirecting to login...");
-            navigator?.navigateTo("signin");
-            return;
-          default:
-            setError("Server error");
-            break;
-        }
+        handleResultError(result);
       } else {
         setLoading(false);
         context?.setPermission(result?.permission || "U");
@@ -124,12 +125,24 @@ export function Catalog() {
   }, [context?.username]);
 
   if (loading) {
-    return <Loader />;
+    return <LegacyLoader />;
   }
 
   if (error) {
-    return <div>Error: {error}</div>;
+    navigator?.navigateTo("error-page");
   }
+
+  const handleFetchData = async () => {
+    const result = await EventApi.getAllEvents(page);
+    if (typeof result !== "number") {
+      if (result.length === 0) {
+        setHasMore(false);
+      } else {
+        setEvents((prevEvents) => [...prevEvents, ...result]);
+        setPage(page + 1);
+      }
+    }
+  };
 
   const cards = events.map((event: any) => {
     const availableTickets = event.tickets.filter(
@@ -231,8 +244,17 @@ export function Catalog() {
             )}
           </Grid.Col>
         </Grid>
-
-        <SimpleGrid cols={{ base: 1, sm: 3 }}>{sortedCards}</SimpleGrid>
+        <InfiniteScroll
+          dataLength={events.length}
+          next={handleFetchData}
+          hasMore={hasMore}
+          loader={<Loader size="sm" mt={50} className="scroll-loader" />}
+          endMessage={
+            <p style={{ textAlign: "center" }}>No more events to load</p>
+          }
+        >
+          <SimpleGrid cols={{ base: 1, sm: 3 }}>{sortedCards}</SimpleGrid>
+        </InfiniteScroll>
       </Container>
     </>
   );

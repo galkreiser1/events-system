@@ -85,6 +85,8 @@ const handleErrorByStatusCode = (statusCode: number): APIStatus => {
       return APIStatus.AlreadyExists;
     case 401:
       return APIStatus.Unauthorized;
+    case 403:
+      return APIStatus.Forbidden;
     case 409:
       return APIStatus.Conflict;
     case 500:

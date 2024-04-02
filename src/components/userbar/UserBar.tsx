@@ -5,6 +5,7 @@ import {
   Avatar,
   Text,
   UnstyledButton,
+  Loader,
 } from "@mantine/core";
 import classes from "./UserBar.module.css";
 import { GoArrowLeft } from "react-icons/go";
@@ -23,7 +24,7 @@ const user = {
 export function UserBar() {
   const context = useContext(sessionContext);
   const navigator = useNavigation();
-  const createEventPermissions = ["M", "A", "W"];
+  const createEventPermissions = ["M", "A"];
 
   const [nextEvent, setNextEvent] = useState<string>("");
   const [numCoupons, setNumCoupons] = useState<number>(0);
@@ -153,16 +154,10 @@ export function UserBar() {
               )}
 
               {context?.route === "catalog" && eventLoading && (
-                <Text fw={500} size="lg">
-                  Fetching next event...
-                </Text>
+                <Loader color="blue" type="dots" />
               )}
 
-              {couponLoading && (
-                <Text fw={500} size="lg">
-                  Fetching num of coupons...
-                </Text>
-              )}
+              {couponLoading && <Loader color="blue" type="dots" />}
 
               {!couponLoading && (
                 <Text fw={500} size="lg">
