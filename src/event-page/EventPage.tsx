@@ -34,7 +34,7 @@ export function EventPage() {
 
   const formatDate = (date: string) => {
     const d = new Date(date);
-    return `${d.getDate()}/${d.getMonth() + 1}/${d.getFullYear()}`;
+    return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
   };
   const formatTime = (startTime: string, endTime: string) => {
     const start = new Date(startTime);
@@ -45,16 +45,18 @@ export function EventPage() {
     );
   };
 
-  const { minPrice, sumTickets } = ticketsData.reduce(
-    (accumulator: any, ticket: ticketsDataType) => {
-      // Update minPrice if current ticket price is lower
-      accumulator.minPrice = Math.min(accumulator.minPrice, ticket.price);
-      // Accumulate sumTickets
-      accumulator.sumTickets += ticket.quantity;
-      return accumulator;
-    },
-    { minPrice: Infinity, sumTickets: 0 }
-  );
+  const { minPrice, sumTickets } = !ticketsData
+    ? { minPrice: 0, sumTickets: 0 }
+    : ticketsData.reduce(
+        (accumulator: any, ticket: ticketsDataType) => {
+          // Update minPrice if current ticket price is lower
+          accumulator.minPrice = Math.min(accumulator.minPrice, ticket.price);
+          // Accumulate sumTickets
+          accumulator.sumTickets += ticket.quantity;
+          return accumulator;
+        },
+        { minPrice: Infinity, sumTickets: 0 }
+      );
 
   // const eventData = {
   //   title: "Maccabi Haifa match",
@@ -109,7 +111,7 @@ export function EventPage() {
             </div>
             <img
               src={eventData?.image}
-              style={{ width: "50%", borderRadius: "5%" }}
+              style={{ width: "35%", borderRadius: "5%" }}
             />
           </div>
         </div>

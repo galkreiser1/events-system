@@ -1,10 +1,11 @@
 // @ts-ignore
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { Textarea, Button } from "@mantine/core";
 import "./CommentForm.css";
 import { commentType } from "../../../types";
 import { commentFormType } from "../../../types";
 import { commentApi } from "../../../api/commentApi";
+import { sessionContext } from "../../../App";
 
 // type commentFormType = {
 //   setComment: (comment: string) => void;
@@ -24,6 +25,8 @@ export function CommentForm({
   newComment,
   close,
 }: commentFormType) {
+  const context = useContext(sessionContext);
+
   const maxCommentLength = 100;
   const displayError = newComment.length > maxCommentLength;
 
@@ -32,8 +35,8 @@ export function CommentForm({
     const date = new Date();
 
     const commentData: commentType = {
-      event_id: "1", //take from context
-      username: "Guest", //take from context
+      event_id: context?.eventId || "", // Provide a default value for context?.eventId
+      username: context?.username ?? "Guest", // Provide a default value for context?.username
       text: commentText,
       date: date.toString(),
     };
@@ -43,6 +46,7 @@ export function CommentForm({
 
     console.log(commentData);
   };
+
   return (
     <div>
       <Textarea

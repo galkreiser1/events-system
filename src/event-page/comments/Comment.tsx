@@ -11,29 +11,50 @@ import {
   Modal,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
+import { commentApi } from "../../api/commentApi";
+
 import { CommentForm } from "./CommentForm/CommentForm";
+import { Loader } from "../../loader/Loader";
 export function Comment({ eventData }: { eventData: any }) {
   // const isUser = context.permissions == "U" ? true : false;
 
-  const commentsData = [
-    {
-      From: "Benny",
-      At: "2024-03-21T2030",
-      Content: "I'm so excited for the game!",
-    },
-    {
-      From: "Shlomo",
-      At: "2024-03-21T2030",
-      Content: "I Hope MAccabi will win this game",
-    },
-    {
-      From: "Yossi",
-      At: "2024-03-21T2030",
-      Content:
-        "This Pokémon likes to lick its palms that are sweetened by being soaked in honey. Teddiursa concocts its own honey by blending fruits and pollen collected by Beedrill. Blastoise has water spouts that protrude from its shell. The water spouts are very accurate.",
-    },
-    { From: "David", At: "2024-03-21T2030", Content: "I'm sure we will win!" },
-  ];
+  const [isLoading, setIsLoading] = React.useState(false);
+  const [commentsData, setCommentsData] = React.useState<any[]>([]);
+
+  React.useEffect(() => {
+    const fetchComments = async () => {
+      setIsLoading(true);
+      const comments = await commentApi.getCommentsByEvent(eventData._id, 1);
+      setCommentsData(comments);
+      setIsLoading(false);
+      console.log(comments);
+    };
+    fetchComments();
+  }, []);
+
+  // const commentsData = [
+
+  // get comments by event:
+
+  // const commentsData = [
+  // {
+  //   From: "Benny",
+  //   At: "2024-03-21T2030",
+  //   Content: "I'm so excited for the game!",
+  // },
+  // {
+  //   From: "Shlomo",
+  //   At: "2024-03-21T2030",
+  //   Content: "I Hope MAccabi will win this game",
+  // },
+  // {
+  //   From: "Yossi",
+  //   At: "2024-03-21T2030",
+  //   Content:
+  //     "This Pokémon likes to lick its palms that are sweetened by being soaked in honey. Teddiursa concocts its own honey by blending fruits and pollen collected by Beedrill. Blastoise has water spouts that protrude from its shell. The water spouts are very accurate.",
+  // },
+  // { From: "David", At: "2024-03-21T2030", Content: "I'm sure we will win!" },
+  // ];
   const [opened, { open, close }] = useDisclosure(false);
   const [newComment, setNewComment] = React.useState("");
 
@@ -47,30 +68,47 @@ export function Comment({ eventData }: { eventData: any }) {
   //   return <Text> `total comments for the event: ${numOfComments}` </Text>
   // }
 
+  const formatDate = (date: string) => {
+    const d = new Date(date);
+    return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+  };
+
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
     <div className={classes.comments_wrapper}>
       <Title className={classes.comments_title}>Comments:</Title>
-      <ScrollArea type="auto" scrollbarSize={6} classNames={classes} h={200}>
-        {commentsData.map((comment, index) => (
-          <div key={index} className={classes.comment_container}>
-            <Group>
-              <Avatar color="rgb(100, 187, 221)" src={null} />
-              <div>
-                <Text fw={600} size="sm">
-                  {comment.From}
-                </Text>
-                <Text fw={400} size="xs" c="dimmed">
-                  {comment.At}
-                </Text>
-              </div>
-            </Group>
-            <Text fw={500} pl={54} pt="sm" size="sm">
-              {comment.Content}
-            </Text>
-            <Divider size="xs" my="sm" />
-          </div>
-        ))}
-      </ScrollArea>
+      {commentsData.length === 0 ? (
+        <div>
+          <Text>
+            No comments available yet, <br /> you can be the first :)
+          </Text>
+        </div>
+      ) : (
+        <ScrollArea type="auto" scrollbarSize={6} classNames={classes} h={200}>
+          {commentsData.map((comment, index) => (
+            <div key={index} className={classes.comment_container}>
+              <Group>
+                <Avatar color="rgb(100, 187, 221)" src={null} />
+                <div>
+                  <Text fw={600} size="sm">
+                    {comment.username}
+                  </Text>
+                  <Text fw={400} size="xs" c="dimmed">
+                    {formatDate(comment.date)}
+                  </Text>
+                </div>
+              </Group>
+              <Text fw={500} pl={54} pt="sm" size="sm">
+                {comment.text}
+              </Text>
+              <Divider size="xs" my="sm" />
+            </div>
+          ))}
+        </ScrollArea>
+      )}
       <Modal
         opened={opened}
         onClose={() => {

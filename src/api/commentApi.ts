@@ -14,7 +14,10 @@ export const commentApi = {
     try {
       const res = await axios.post(
         API_GATEWAY_URL + CREATE_COMMENT_PATH,
-        comment
+        comment,
+        {
+          withCredentials: true,
+        }
       );
 
       if (res.status === 201) {
@@ -39,7 +42,10 @@ export const commentApi = {
           GET_COMMENTS_BY_EVENT_PATH.replace(":eventId", eventId).replace(
             ":page",
             page.toString()
-          )
+          ),
+        {
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
@@ -58,7 +64,10 @@ export const commentApi = {
     try {
       const res = await axios.get(
         API_GATEWAY_URL +
-          GET_NUM_OF_COMMENTS_BY_EVENT_PATH.replace(":eventId", eventId)
+          GET_NUM_OF_COMMENTS_BY_EVENT_PATH.replace(":eventId", eventId),
+        {
+          withCredentials: true,
+        }
       );
 
       if (res.status === 200) {
