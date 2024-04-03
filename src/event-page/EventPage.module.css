@@ -4,6 +4,7 @@
   justify-content: space-between;
   padding: calc(var(--mantine-spacing-xl) * 2) var(--mantine-spacing-xl);
   align-items: center;
+  padding-top: 0;
 }
 
 .top_wrapper {

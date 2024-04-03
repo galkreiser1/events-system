@@ -4,7 +4,7 @@ export enum APIStatus {
   Unauthorized,
   AlreadyExists,
   ServerError,
-  Conflict
+  Conflict,
 }
 export type commentType = {
   event_id: string;
@@ -17,4 +17,10 @@ export type commentFormType = {
   setNewComment: (comment: string) => void;
   newComment: string;
   close: () => void;
+};
+
+export type ticketsDataType = {
+  type: string;
+  quantity: number;
+  price: number;
 };

@@ -4,18 +4,19 @@ import React, { useState } from "react";
 import { ScrollArea, Title, Button, Text, NumberInput } from "@mantine/core";
 import classes from "./Tickets.module.css";
 import { useNavigation } from "../../App";
+import { ticketsDataType } from "../../types";
 
-export function Tickets() {
+export function Tickets({ ticketsData }: { ticketsData: any }) {
   const navigator = useNavigation();
-  const TicketsData = [
-    { type: "Regular", price: 20, available: 100 },
-    { type: "VIP", price: 50, available: 50 },
-    { type: "Gold", price: 100, available: 20 },
-    //{ type: "Platinum", price: 200, available: 10 },
-  ];
+  // const ticketsData = [
+  //   { type: "Regular", price: 20, quantity: 100 },
+  //   { type: "VIP", price: 50, quantity: 50 },
+  //   { type: "Gold", price: 100, quantity: 20 },
+  //   //{ type: "Platinum", price: 200, quantity: 10 },
+  // ];
 
   const [numOfTicketsArray, setNumOfTicketsArray] = useState(
-    TicketsData.map(() => 0)
+    ticketsData ? ticketsData.map(() => 0) : []
   );
 
   const handleChangeTickets = (index: number, value: number) => {
@@ -30,12 +31,12 @@ export function Tickets() {
       console.log("Please choose amount of tickets");
       return;
     }
-    if (numOfTickets > TicketsData[index].available) {
+    if (numOfTickets > ticketsData[index]?.quantity) {
       console.log("Not enough tickets available");
       return;
     }
     console.log(
-      `Buying ${numOfTickets} tickets for ${TicketsData[index].type}`
+      `Buying ${numOfTickets} tickets for ${ticketsData[index]?.type}`
     );
     navigator?.navigateTo("checkout");
   };
@@ -45,11 +46,11 @@ export function Tickets() {
       <Title className={classes.buy_tickets_title}>Buy Tickets:</Title>
       <ScrollArea.Autosize maw={700}>
         <div className={classes.tickets_container}>
-          {TicketsData.map((ticket, index) => (
+          {ticketsData?.map((ticket: ticketsDataType, index: number) => (
             <div key={index} className={classes.ticket_card}>
               <Title className={classes.ticket_card_title}>{ticket.type}</Title>
               <Text> Price: {ticket.price}$</Text>
-              <Text>Available: {ticket.available}</Text>
+              <Text>Available: {ticket.quantity}</Text>
               <div className={classes.choose_tickets}>
                 <NumberInput
                   value={numOfTicketsArray[index]}
@@ -57,7 +58,7 @@ export function Tickets() {
                     handleChangeTickets(index, Number(value))
                   }
                   min={0}
-                  max={ticket.available}
+                  max={ticket.quantity}
                   allowNegative={false}
                   allowDecimal={false}
                   placeholder="Amount"
