@@ -147,6 +147,8 @@ export function EventForm() {
     const result = await EventApi.createEvent(combined_values);
     if (result === APIStatus.Success) {
       setSuccess(true);
+    } else if (result === APIStatus.Forbidden) {
+      setError("Permission Denied");
     } else {
       setError("Server error");
     }

@@ -30,9 +30,27 @@ export function SmallEventCard({
       </Card.Section>
 
       <Text fz="md" mt="xs">
-        Start date: {start_date.toLocaleDateString("en-GB")}
+        Start date:{" "}
+        {start_date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
       </Text>
-      <Text fz="md">End date: {end_date.toLocaleDateString("en-GB")}</Text>
+      <Text fz="md">
+        End date:{" "}
+        {end_date.toLocaleDateString("en-GB", {
+          day: "2-digit",
+          month: "2-digit",
+          year: "numeric",
+          hour: "2-digit",
+          minute: "2-digit",
+          hour12: false,
+        })}
+      </Text>
 
       <Card.Section className="section" mt="s">
         <Text fz="md" fw={500}>

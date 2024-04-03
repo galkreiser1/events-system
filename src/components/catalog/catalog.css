@@ -11,3 +11,8 @@
   font-family: "Greycliff CF", var(--mantine-font-family);
   font-weight: bold;
 }
+
+.scroll-loader {
+  position: absolute;
+  left: 50%;
+}

@@ -11,11 +11,14 @@ import {
 const SERVER_URL = IS_LOCAL ? LOCAL_SERVER_URL : USERS_SERVER_URL;
 
 export const EventApi = {
-  getAllEvents: async (): Promise<any | APIStatus> => {
+  getAllEvents: async (page = 1): Promise<any | APIStatus> => {
     try {
-      const res = await axios.get(SERVER_URL + GET_ALL_EVENTS_PATH, {
-        withCredentials: true,
-      });
+      const res = await axios.get(
+        SERVER_URL + GET_ALL_EVENTS_PATH + `?page=${page}`,
+        {
+          withCredentials: true,
+        }
+      );
 
       if (res.status === 200) {
         return res.data;
@@ -117,6 +120,8 @@ const handleErrorByStatusCode = (statusCode: number): APIStatus => {
       return APIStatus.BadRequest;
     case 401:
       return APIStatus.Unauthorized;
+    case 403:
+      return APIStatus.Forbidden;
     case 500:
       return APIStatus.ServerError;
     default:

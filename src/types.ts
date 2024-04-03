@@ -5,6 +5,7 @@ export enum APIStatus {
   AlreadyExists,
   ServerError,
   Conflict,
+  Forbidden,
 }
 export type commentType = {
   event_id: string;
