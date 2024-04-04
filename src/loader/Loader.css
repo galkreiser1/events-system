@@ -6,7 +6,7 @@
   height: 50px;
   animation: spin 1s linear infinite;
 
-  position: fixed;
+  position: relative;
   top: 50%;
   left: 50%;
 

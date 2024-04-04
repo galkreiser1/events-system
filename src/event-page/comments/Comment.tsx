@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import classes from "./Comment.module.css";
 import {
   Title,
@@ -12,25 +12,40 @@ import {
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { commentApi } from "../../api/commentApi";
+import { Pagination } from "@mantine/core";
 
 import { CommentForm } from "./CommentForm/CommentForm";
 import { Loader } from "../../loader/Loader";
+import { sessionContext } from "../../App";
 export function Comment({ eventData }: { eventData: any }) {
   // const isUser = context.permissions == "U" ? true : false;
 
   const [isLoading, setIsLoading] = React.useState(false);
   const [commentsData, setCommentsData] = React.useState<any[]>([]);
+  const [page, setPage] = React.useState(1);
+  const [totalPages, setTotalPages] = React.useState(1);
+  const [numOfComments, setNumOfComments] = React.useState(0);
+
+  const context = useContext(sessionContext);
 
   React.useEffect(() => {
     const fetchComments = async () => {
       setIsLoading(true);
-      const comments = await commentApi.getCommentsByEvent(eventData._id, 1);
+      const comments = await commentApi.getCommentsByEvent(eventData._id, page);
+      const commentsNum = await commentApi.getNumOfCommentsByEvent(
+        eventData._id
+      );
+      setNumOfComments(Number(commentsNum));
+      const commentsPerPage = 5;
+      setTotalPages(Math.ceil(numOfComments / commentsPerPage));
       setCommentsData(comments);
+
       setIsLoading(false);
+      console.log(numOfComments);
       console.log(comments);
     };
     fetchComments();
-  }, []);
+  }, [numOfComments, page]);
 
   // const commentsData = [
 
@@ -58,16 +73,6 @@ export function Comment({ eventData }: { eventData: any }) {
   const [opened, { open, close }] = useDisclosure(false);
   const [newComment, setNewComment] = React.useState("");
 
-  // if (!isUser) {
-  // const event_id = eventSession.event_id;
-
-  //setIsLoading(true);
-  // const numOfComments = await getNumOfCommentsByEvent(event_id);
-  //setIsLoading(true);
-
-  //   return <Text> `total comments for the event: ${numOfComments}` </Text>
-  // }
-
   const formatDate = (date: string) => {
     const d = new Date(date);
     return `${String(d.getDate()).padStart(2, "0")}.${String(
@@ -78,15 +83,26 @@ export function Comment({ eventData }: { eventData: any }) {
   return (
     <div className={classes.comments_wrapper}>
       <Title className={classes.comments_title}>Comments:</Title>
-      {isLoading ? (
-        <Loader />
-      ) : commentsData.length === 0 ? (
-        <div>
-          <Text>
-            No comments available yet, <br /> you can be the first :)
-          </Text>
+      {isLoading && (
+        <div className={classes.loader}>
+          <Loader />
         </div>
-      ) : (
+      )}
+      {!isLoading && context?.permission !== "U" && (
+        <div>
+          <Text>Users posted {numOfComments} comments so far</Text>
+        </div>
+      )}
+      {!isLoading &&
+        context?.permission === "U" &&
+        commentsData.length === 0 && (
+          <div>
+            <Text>
+              No comments available yet, <br /> you can be the first :)
+            </Text>
+          </div>
+        )}
+      {!isLoading && commentsData.length > 0 && context?.permission === "U" && (
         <ScrollArea type="auto" scrollbarSize={6} classNames={classes} h={200}>
           {commentsData.map((comment, index) => (
             <div key={index} className={classes.comment_container}>
@@ -109,35 +125,40 @@ export function Comment({ eventData }: { eventData: any }) {
           ))}
         </ScrollArea>
       )}
-      <Modal
-        opened={opened}
-        onClose={() => {
-          close();
-          setNewComment("");
-        }}
-        title={eventData.title}
-        size="md"
-        overlayProps={{
-          backgroundOpacity: 0.55,
-          blur: 3,
-        }}
-      >
-        <CommentForm
-          setNewComment={setNewComment}
-          newComment={newComment}
-          close={close}
-        />
-      </Modal>
 
-      <Button
-        onClick={open}
-        mt={"lg"}
-        color="rgb(100, 187, 221)"
-        ta="center"
-        w={150}
-      >
-        Add Comment
-      </Button>
+      {!isLoading && context?.permission === "U" && (
+        <div>
+          <Modal
+            opened={opened}
+            onClose={() => {
+              close();
+              setNewComment("");
+            }}
+            title={eventData.title}
+            size="md"
+            overlayProps={{
+              backgroundOpacity: 0.55,
+              blur: 3,
+            }}
+          >
+            <CommentForm
+              setNewComment={setNewComment}
+              newComment={newComment}
+              close={close}
+            />
+          </Modal>
+          <Pagination value={page} onChange={setPage} total={totalPages} />
+          <Button
+            onClick={open}
+            mt={"lg"}
+            color="rgb(100, 187, 221)"
+            ta="center"
+            w={150}
+          >
+            Add Comment
+          </Button>
+        </div>
+      )}
     </div>
   );
 }

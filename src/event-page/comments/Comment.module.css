@@ -35,3 +35,7 @@
     background-color: var(--mantine-color-blue-2);
   }
 }
+
+.loader {
+  position: relative;
+}
