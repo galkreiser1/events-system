@@ -95,7 +95,7 @@ export const EventApi = {
       );
 
       if (res.status === 200) {
-        return res.data;
+        return APIStatus.Success;
       } else {
         return handleError(res.status);
       }

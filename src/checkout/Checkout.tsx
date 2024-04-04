@@ -11,21 +11,48 @@ import classes from "./Checkout.module.css";
 import "@mantine/core/styles.css";
 import bg from "./bg.png";
 
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
+import { sessionContext } from "../App";
 
 export function Checkout() {
   const [coupon, setCoupon] = useState("");
   const [discount, setDiscount] = useState(0);
+  const context = useContext(sessionContext);
 
-  let MOCKDATA = [
-    { title: "Event:", description: "Maccabi Haifa match" },
-    { title: "Tickets:", description: "2 X Gold Seats" },
-    { title: "Original Price:", description: "100$" },
+  const orderData = [
+    { title: "Event:", description: context?.orderData.event_title },
+    {
+      title: "Tickets:",
+      description: `${context?.orderData.quantity} x ${context?.orderData.ticket_type}`,
+    },
+    {
+      title: "Original Price:",
+      description: `${
+        (context?.orderData.price ?? 0) * (context?.orderData.quantity ?? 0)
+      }$`,
+    },
     { title: "Discount:", description: "0$" },
-    { title: "Price After Discount:", description: "100$" },
+    {
+      title: "Price After Discount:",
+      description: `${
+        (context?.orderData.price ?? 0) * (context?.orderData.quantity ?? 0)
+      }$`,
+    },
   ];
-  const [orderDetails, setOrderDetails] = useState(MOCKDATA);
-  const originalPrice = parseInt(MOCKDATA[2].description.slice(0, -1));
+
+  // let MOCKDATA = [
+  //   { title: "Event:", description: "Maccabi Haifa match" },
+  //   { title: "Tickets:", description: "2 X Gold Seats" },
+  //   { title: "Original Price:", description: "100$" },
+  //   { title: "Discount:", description: "0$" },
+  //   { title: "Price After Discount:", description: "100$" },
+  // ];
+  const [orderDetails, setOrderDetails] = useState(orderData);
+  console.log(orderDetails);
+  const originalPrice = parseInt(
+    orderData[2]?.description?.slice(0, -1) ?? "0"
+  );
+
   const [paymentDetails, setPaymentDetails] = useState({
     holder: "",
     cc: "",
@@ -43,6 +70,8 @@ export function Checkout() {
       { title: "Discount:", description: `${discount}$` },
       { title: "Price After Discount:", description: `${priceAfterDiscount}$` },
     ]);
+
+    console.log(orderDetails);
   }, [discount]);
 
   const activateCoupon = (coupon: string) => {

@@ -25,3 +25,11 @@ export type ticketsDataType = {
   quantity: number;
   price: number;
 };
+
+export type orderDataType = {
+  event_id: string;
+  event_title: string;
+  ticket_type: string;
+  quantity: number;
+  price: number;
+};

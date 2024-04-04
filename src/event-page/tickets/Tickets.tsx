@@ -1,12 +1,21 @@
 // @ts-ignore
 
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { ScrollArea, Title, Button, Text, NumberInput } from "@mantine/core";
 import classes from "./Tickets.module.css";
-import { useNavigation } from "../../App";
-import { ticketsDataType } from "../../types";
+import { sessionContext, useNavigation } from "../../App";
+import { APIStatus, ticketsDataType } from "../../types";
+import { EventApi } from "../../api/eventApi";
 
-export function Tickets({ ticketsData }: { ticketsData: any }) {
+export function Tickets({
+  eventData,
+  setEventData,
+}: //setTicketsData,
+{
+  eventData: any;
+  setEventData: any;
+  setTicketsData: any;
+}) {
   const navigator = useNavigation();
   // const ticketsData = [
   //   { type: "Regular", price: 20, quantity: 100 },
@@ -15,8 +24,17 @@ export function Tickets({ ticketsData }: { ticketsData: any }) {
   //   //{ type: "Platinum", price: 200, quantity: 10 },
   // ];
 
+  const context = useContext(sessionContext);
+  const [ticketsData, setTicketsData] = useState<ticketsDataType[] | null>(
+    eventData.tickets
+  );
+
   const [numOfTicketsArray, setNumOfTicketsArray] = useState(
     ticketsData ? ticketsData.map(() => 0) : []
+  );
+
+  const [loadingButton, setLoadingButton] = useState(
+    ticketsData ? ticketsData.map(() => false) : []
   );
 
   const handleChangeTickets = (index: number, value: number) => {
@@ -25,20 +43,73 @@ export function Tickets({ ticketsData }: { ticketsData: any }) {
     setNumOfTicketsArray(newNumOfTicketsArray);
   };
 
-  const handleBuyNow = (index: number) => {
+  const changeLoading = (index: number, bool: boolean) => {
+    const newLoadingArray = [...loadingButton];
+    newLoadingArray[index] = bool;
+    setLoadingButton(newLoadingArray);
+  };
+
+  const handleBuyNow = async (index: number) => {
     const numOfTickets = numOfTicketsArray[index];
     if (numOfTickets === 0) {
       console.log("Please choose amount of tickets");
       return;
     }
-    if (numOfTickets > ticketsData[index]?.quantity) {
-      console.log("Not enough tickets available");
+
+    changeLoading(index, true);
+    const updatedEvent = await EventApi.getEvent(context?.eventId || "");
+
+    // check if enough tickets available:
+    // if (updatedEvent?.tickets[index]?.quantity < numOfTickets) {
+    //   console.log("Not enough tickets available");
+    //   setTicketsData(updatedEvent?.tickets);
+    //   changeLoading(index, false);
+    //   return;
+    // }
+
+    // check if event dates have changed:
+    if (updatedEvent?.date !== eventData.date) {
+      console.log("Event dates have changed");
+      setEventData(updatedEvent);
+      changeLoading(index, false);
+
       return;
     }
-    console.log(
-      `Buying ${numOfTickets} tickets for ${ticketsData[index]?.type}`
+
+    const ticketsToBuy = {
+      ticket_type: ticketsData?.[index]?.type,
+      quantity: numOfTickets,
+    };
+
+    const res = await EventApi.updateEventTicket(
+      context?.eventId ?? "",
+      ticketsToBuy
     );
-    navigator?.navigateTo("checkout");
+
+    if (res === APIStatus.Success) {
+      console.log(
+        `Buying ${numOfTickets} tickets for ${ticketsData?.[index]?.type}`
+      );
+
+      const orderData = {
+        event_id: context?.eventId || "",
+        event_title: eventData?.title || "",
+        ticket_type: ticketsData?.[index]?.type || "",
+        quantity: Number(numOfTickets),
+        price: Number(ticketsData?.[index]?.price) || 0,
+      };
+      context?.setOrderData(orderData);
+      console.log(context?.orderData);
+      changeLoading(index, false);
+      navigator?.navigateTo("checkout");
+    } else {
+      // TODO FOR GAL: if (res === APIStatus.NotEnoughTickets)
+      console.log("Error buying tickets");
+      setTicketsData(updatedEvent?.tickets);
+      //setEventData(updatedEvent); // TODO: update event data or only tickes data?
+      changeLoading(index, false);
+      return;
+    }
   };
 
   return (
@@ -51,27 +122,38 @@ export function Tickets({ ticketsData }: { ticketsData: any }) {
               <Title className={classes.ticket_card_title}>{ticket.type}</Title>
               <Text> Price: {ticket.price}$</Text>
               <Text>Available: {ticket.quantity}</Text>
-              <div className={classes.choose_tickets}>
-                <NumberInput
-                  value={numOfTicketsArray[index]}
-                  onChange={(value) =>
-                    handleChangeTickets(index, Number(value))
-                  }
-                  min={0}
-                  max={ticket.quantity}
-                  allowNegative={false}
-                  allowDecimal={false}
-                  placeholder="Amount"
-                  suffix=" tickets"
-                />
-              </div>
-              <Button
-                mt={"sm"}
-                color="rgb(100, 187, 221)"
-                onClick={() => handleBuyNow(index)}
-              >
-                Buy Now
-              </Button>
+              {context?.permission === "U" && (
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    alignItems: "center",
+                  }}
+                >
+                  <div className={classes.choose_tickets}>
+                    <NumberInput
+                      value={numOfTicketsArray[index]}
+                      onChange={(value) =>
+                        handleChangeTickets(index, Number(value))
+                      }
+                      min={0}
+                      max={ticket.quantity}
+                      allowNegative={false}
+                      allowDecimal={false}
+                      placeholder="Amount"
+                      suffix=" tickets"
+                    />
+                  </div>
+                  <Button
+                    mt={"sm"}
+                    color="rgb(100, 187, 221)"
+                    onClick={() => handleBuyNow(index)}
+                    loading={loadingButton[index]}
+                  >
+                    Buy Now
+                  </Button>
+                </div>
+              )}
             </div>
           ))}
         </div>

@@ -147,7 +147,12 @@ export function Comment({ eventData }: { eventData: any }) {
               close={close}
             />
           </Modal>
-          <Pagination value={page} onChange={setPage} total={totalPages} />
+          <Pagination
+            color="rgb(100, 187, 221)"
+            value={page}
+            onChange={setPage}
+            total={totalPages}
+          />
           <Button
             onClick={open}
             mt={"lg"}

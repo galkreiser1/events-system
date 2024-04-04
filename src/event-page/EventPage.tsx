@@ -117,7 +117,11 @@ export function EventPage() {
             />
           </div>
         </div>
-        <Tickets ticketsData={ticketsData} />
+        <Tickets
+          eventData={eventData}
+          setEventData={setEventData}
+          setTicketsData={setTicketsData}
+        />
 
         <Comment eventData={eventData} />
       </div>
