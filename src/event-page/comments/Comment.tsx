@@ -70,17 +70,17 @@ export function Comment({ eventData }: { eventData: any }) {
 
   const formatDate = (date: string) => {
     const d = new Date(date);
-    return `${d.getDate()}.${d.getMonth() + 1}.${d.getFullYear()}`;
+    return `${String(d.getDate()).padStart(2, "0")}.${String(
+      d.getMonth() + 1
+    ).padStart(2, "0")}.${d.getFullYear() % 100}`;
   };
-
-  if (isLoading) {
-    return <Loader />;
-  }
 
   return (
     <div className={classes.comments_wrapper}>
       <Title className={classes.comments_title}>Comments:</Title>
-      {commentsData.length === 0 ? (
+      {isLoading ? (
+        <Loader />
+      ) : commentsData.length === 0 ? (
         <div>
           <Text>
             No comments available yet, <br /> you can be the first :)
