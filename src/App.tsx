@@ -1,6 +1,5 @@
 import "./App.css";
 import "@mantine/core/styles.css";
-// import { EventForm } from "./components/eventform/eventform";
 import { Catalog } from "./components/catalog/catalog";
 import { EventPage } from "./event-page/EventPage";
 import React, { useState, useEffect, createContext, useContext } from "react";
@@ -11,8 +10,8 @@ import { UserSpace } from "./components/userspace/UserSpace";
 import { EventForm } from "./components/eventform/eventform";
 import { UserBar } from "./components/userbar/UserBar";
 import { CouponForm } from "./components/couponform/couponform";
+import { ErrorPage } from "./components/errorpage/errorpage";
 // import { SuccessPage } from "./success_page/SuccessPage";
-// import { createBrowserRouter, RouterProvider } from "react-router-dom";
 
 export interface sessionContextType {
   permission: string;
@@ -85,7 +84,9 @@ function App() {
   return (
     <sessionContext.Provider value={sessionValues}>
       <NavigationContext.Provider value={navigationValues}>
-        {route !== "signin" && route !== "signup" && <UserBar />}
+        {route !== "signin" && route !== "signup" && route !== "error-page" && (
+          <UserBar />
+        )}
         {route === "signin" && <SignIn />}
         {route === "signup" && <SignUp />}
         {route === "catalog" && <Catalog />}
@@ -94,6 +95,7 @@ function App() {
         {route === "userspace" && <UserSpace />}
         {route === "eventform" && <EventForm />}
         {route === "couponform" && <CouponForm />}
+        {route === "error-page" && <ErrorPage />}
       </NavigationContext.Provider>
     </sessionContext.Provider>
   );
