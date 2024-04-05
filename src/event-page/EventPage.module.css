@@ -4,6 +4,7 @@
   justify-content: space-between;
   padding: calc(var(--mantine-spacing-xl) * 2) var(--mantine-spacing-xl);
   align-items: center;
+  padding-top: 0;
 }
 
 .top_wrapper {
@@ -31,13 +32,13 @@
 .event_row {
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
+  justify-content: space-evenly;
   margin-bottom: var(--mantine-spacing-lg);
 }
 .event_details {
   display: flex;
   flex-direction: column;
-  max-width: 30vw;
+  width: 30%;
   align-content: center;
 }
 

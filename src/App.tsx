@@ -11,6 +11,7 @@ import { EventForm } from "./components/eventform/eventform";
 import { UserBar } from "./components/userbar/UserBar";
 import { CouponForm } from "./components/couponform/couponform";
 import { ErrorPage } from "./components/errorpage/errorpage";
+import { orderDataType } from "./types";
 // import { SuccessPage } from "./success_page/SuccessPage";
 
 export interface sessionContextType {
@@ -21,6 +22,8 @@ export interface sessionContextType {
   eventId?: string;
   setEventId?: React.Dispatch<React.SetStateAction<string>>;
   route: string;
+  orderData: orderDataType;
+  setOrderData: React.Dispatch<React.SetStateAction<orderDataType>>;
 }
 export const sessionContext = React.createContext<sessionContextType | null>(
   null
@@ -39,6 +42,13 @@ function App() {
   const [permission, setPermission] = useState<string>("U");
   const [username, setUsername] = useState<string>("");
   const [eventId, setEventId] = useState<string>("");
+  const [orderData, setOrderData] = useState<orderDataType>({
+    event_id: "",
+    event_title: "",
+    ticket_type: "",
+    quantity: 0,
+    price: 0,
+  });
 
   useEffect(() => {
     setPermission("U");
@@ -77,6 +87,8 @@ function App() {
     eventId,
     setEventId,
     route,
+    orderData,
+    setOrderData,
   };
 
   //TODO: navigation through URL input

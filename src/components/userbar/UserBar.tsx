@@ -95,7 +95,7 @@ export function UserBar() {
   };
 
   return (
-    <Box pb={120}>
+    <Box pb={50}>
       <header className={classes.header}>
         <Group justify="space-between" h="100%">
           {context?.permission === "U" && (
