@@ -13,6 +13,8 @@ import bg from "./bg.png";
 
 import { useContext, useEffect, useState } from "react";
 import { sessionContext } from "../App";
+import { Timer } from "./Timer";
+import { EventApi } from "../api/eventApi";
 
 export function Checkout() {
   const [coupon, setCoupon] = useState("");
@@ -91,16 +93,33 @@ export function Checkout() {
   };
 
   //TODO: add form validations
+  const handleRollBack = async () => {
+    console.log("Rolling back");
+    const ticketsToRollBack = {
+      ticket_type: context?.orderData.ticket_type ?? "",
+      quantity: -(context?.orderData.quantity ?? 0),
+    };
+    const res = await EventApi.updateEventTicket(
+      context?.eventId ?? "",
+      ticketsToRollBack
+    );
+    console.log(
+      `RolledBack ${ticketsToRollBack.quantity} tickets of type ${ticketsToRollBack.ticket_type} `,
+      res
+    );
+  };
 
   return (
     <div
       style={{
         display: "flex",
+        flexDirection: "column",
         placeContent: "center",
         placeItems: "center",
         height: "80vh",
       }}
     >
+      <Timer onComplete={handleRollBack} />
       <Paper shadow="md" radius="lg">
         <div className={classes.wrapper}>
           <div
