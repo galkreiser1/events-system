@@ -20,6 +20,14 @@
   font-family: "Roboto", sans-serif;
   justify-content: column;
 }
+.not-saved-text {
+  align-items: center;
+  color: #a30000;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  justify-content: column;
+}
 
 .value {
   font-size: 20px;

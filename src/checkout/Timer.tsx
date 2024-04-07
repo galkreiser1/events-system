@@ -37,7 +37,7 @@ export const Timer = ({ onComplete }: { onComplete: () => void }) => {
                 <div className="text">seconds</div>
               </div>
             ) : (
-              <div className="text">
+              <div className="not-saved-test">
                 Tickets <br /> are not <br /> saved <br /> anymore
               </div>
             );
