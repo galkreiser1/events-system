@@ -19,7 +19,7 @@ export const Timer = ({ onComplete }: { onComplete: () => void }) => {
     <div className="timer">
       <div className="timer-wrapper">
         <CountdownCircleTimer
-          duration={60}
+          duration={120}
           colors={["#64BBDD", "#F7B801", "#A30000", "#A30000"]}
           colorsTime={[120, 60, 10, 0]}
           onComplete={handleTimeOut}
