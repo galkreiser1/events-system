@@ -12,6 +12,7 @@ import { UserBar } from "./components/userbar/UserBar";
 import { CouponForm } from "./components/couponform/couponform";
 import { ErrorPage } from "./components/errorpage/errorpage";
 import { orderDataType } from "./types";
+import { AuthApi } from "./api/authApi";
 // import { SuccessPage } from "./success_page/SuccessPage";
 
 export interface sessionContextType {
@@ -51,11 +52,21 @@ function App() {
   });
 
   useEffect(() => {
-    setPermission("U");
-  }, []);
+    const fetchData = async () => {
+      let result: any = await AuthApi.getUserName();
+      result = JSON.parse(result);
+      if (typeof result === "number") {
+        navigateTo(window.location.pathname.split("/").pop() || "signin");
+      } else {
+        setPermission(result?.permission || "U");
+        setUsername(result?.username || "");
+        navigateTo(window.location.pathname.split("/").pop() || "catalog");
+      }
+    };
 
-  useEffect(() => {
-    navigateTo(window.location.pathname.split("/").pop() || "signin");
+    if (!username) {
+      fetchData();
+    }
   }, []);
 
   //TODO: dont let the user get to pages that need data from previous pages
@@ -96,9 +107,10 @@ function App() {
   return (
     <sessionContext.Provider value={sessionValues}>
       <NavigationContext.Provider value={navigationValues}>
-        {route !== "signin" && route !== "signup" && route !== "error-page" && (
-          <UserBar />
-        )}
+        {route !== "signin" &&
+          route !== "signup" &&
+          route !== "error-page" &&
+          username && <UserBar />}
         {route === "signin" && <SignIn />}
         {route === "signup" && <SignUp />}
         {route === "catalog" && <Catalog />}

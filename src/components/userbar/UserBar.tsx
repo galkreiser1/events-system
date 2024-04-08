@@ -76,7 +76,7 @@ export function UserBar() {
     if (!context?.username) {
       fetchData();
     }
-  }, [[context?.username]]);
+  }, [context?.username]);
 
   const handleLogOut = async () => {
     try {

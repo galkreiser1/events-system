@@ -61,9 +61,11 @@ export function EventCard({
         {tickets_left === 0 && permission === "U" && (
           <Text mt="md">Sold Out</Text>
         )}
-        <Text mt="md" c="dimmed">
-          Tickets left: {tickets_left}
-        </Text>
+        {(tickets_left > 0 || (tickets_left === 0 && permission !== "U")) && (
+          <Text mt="md" c="dimmed">
+            Tickets left: {tickets_left}
+          </Text>
+        )}
       </Card.Section>
 
       <Group mt="auto">
