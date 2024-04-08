@@ -1,0 +1,37 @@
+.timer-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
+.timer {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-bottom: 10px;
+}
+/* rgb(100, 187, 221); */
+.text {
+  align-items: center;
+  color: var(--mantine-color-black-2);
+  font-size: 10px;
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  justify-content: column;
+}
+.not-saved-text {
+  align-items: center;
+  color: #a30000;
+  font-size: 10px;
+  font-weight: 700;
+  font-family: "Roboto", sans-serif;
+  justify-content: column;
+}
+
+.value {
+  font-size: 20px;
+  align-items: center;
+  display: flex;
+  justify-content: center;
+}
