@@ -96,7 +96,7 @@ export function Catalog() {
 
   useEffect(() => {
     const fetchData = async () => {
-      const result = await EventApi.getAllEvents(page);
+      let result = await EventApi.getAllEvents(page);
       if (typeof result === "number") {
         setLoading(false);
         handleResultError(result);
@@ -104,7 +104,17 @@ export function Catalog() {
         if (result.length === 0) {
           setHasMore(false);
         } else {
-          setEvents(result);
+          if (context?.permission === "U") {
+            result = result.filter((event: any) => {
+              return new Date(event.start_date) >= new Date();
+            });
+          }
+
+          result = result.filter((event: any) => {
+            return !events.find((e: any) => e._id === event._id);
+          });
+
+          setEvents([...events, ...result]);
           setPage(page + 1);
         }
         setMaxValue(getMaxPrice(events));
@@ -113,14 +123,10 @@ export function Catalog() {
       }
     };
 
-    if (events.length === 0 && hasMore) {
+    if (events.length < 9 && hasMore) {
       setError("");
       fetchData();
     }
-
-    // if (events.length > 0 && events.length < 9 && hasMore) {
-    //   handleFetchData();
-    // }
   }, [events]);
 
   useEffect(() => {
@@ -178,9 +184,9 @@ export function Catalog() {
 
   const chosenCards = context?.permission === "U" ? filteredCards : cards;
 
-  if (chosenCards.length < 9 && hasMore) {
-    handleFetchData();
-  }
+  // if (chosenCards.length < 9 && hasMore) {
+  //   handleFetchData();
+  // }
 
   const sortedCards = chosenCards
     .filter((event: any) => {
