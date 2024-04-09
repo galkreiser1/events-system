@@ -40,6 +40,7 @@
   flex-direction: column;
   width: 30%;
   align-content: center;
+  align-items: center;
 }
 
 .details_tickets_wrapper {
@@ -60,4 +61,11 @@
   /* border: 1.6px solid black; */
   border-radius: 15px;
   background-color: rgb(209, 236, 247);
+}
+
+.edit_wrapper {
+  width: 40%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

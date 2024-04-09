@@ -1,6 +1,6 @@
 // @ts-ignore
-import react, { useContext, useEffect } from "react";
-import { Title, Text } from "@mantine/core";
+import react, { useContext, useEffect, useState } from "react";
+import { Title, Text, Button } from "@mantine/core";
 import classes from "./EventPage.module.css";
 import { Tickets } from "./tickets/Tickets";
 import { Comment } from "./comments/Comment";
@@ -8,11 +8,18 @@ import { sessionContext } from "../App";
 import { EventApi } from "../api/eventApi";
 import { Loader } from "../loader/Loader";
 import { ticketsDataType } from "../types";
+import { DateTimePicker } from "@mantine/dates";
 
 export function EventPage() {
   const [isLoading, setIsLoading] = react.useState<boolean>(true);
   const [eventData, setEventData] = react.useState<any>();
   const [ticketsData, setTicketsData] = react.useState<ticketsDataType[]>([]);
+  const [isEditing, setIsEditing] = react.useState<boolean>(false);
+  const [newStartDate, setNewStartDate] = useState<Date>();
+  const [newEndDate, setNewEndDate] = useState<Date>();
+  const [startValue, setStartValue] = useState<Date | null>(null);
+  const [endValue, setEndValue] = useState<Date | null>(null);
+  const [updatePage, setUpdatePage] = useState<boolean>(false);
 
   const context = useContext(sessionContext);
   useEffect(() => {
@@ -26,11 +33,13 @@ export function EventPage() {
       }
       setEventData(eventData);
       setTicketsData(eventData.tickets);
+      setNewStartDate(new Date(eventData.start_date));
+      setNewEndDate(new Date(eventData.end_date));
       setIsLoading(false);
       console.log(eventData);
     };
     fetchEvent();
-  }, []);
+  }, [updatePage]);
 
   const formatDate = (date: string) => {
     const d = new Date(date);
@@ -38,13 +47,22 @@ export function EventPage() {
       d.getMonth() + 1
     ).padStart(2, "0")}.${d.getFullYear() % 100}`;
   };
-  const formatTime = (startTime: string, endTime: string) => {
-    const start = new Date(startTime);
-    const end = new Date(endTime);
-    return (
-      `${start.getHours()}:${start.getMinutes()}` +
-      ` - ${end.getHours()}:${end.getMinutes()}`
-    );
+
+  // Format HH:MM - HH:MM
+  // const formatTime = (startTime: string, endTime: string) => {
+  //   const start = new Date(startTime);
+  //   const end = new Date(endTime);
+  //   return (
+  //     `${start.getHours()}:${start.getMinutes()}` +
+  //     ` - ${end.getHours()}:${end.getMinutes()}`
+  //   );
+  // };
+
+  const formatTime = (rawDate: Date) => {
+    const date = new Date(rawDate);
+    return `${String(date.getHours()).padStart(2, "0")}:${String(
+      date.getMinutes()
+    ).padStart(2, "0")}`;
   };
 
   const { minPrice, sumTickets } = !ticketsData
@@ -59,6 +77,61 @@ export function EventPage() {
         },
         { minPrice: Infinity, sumTickets: 0 }
       );
+
+  // open DateTimePicker:
+  // const handleEditDate = (date: Date) => {
+  //   console.log("old Event:", eventData.start_date);
+  //   setNewStartDate(date);
+  //   console.log("Edit Event", newStartDate);
+  // };
+
+  useEffect(() => {
+    if (startValue) {
+      const newStartDate = startValue.toISOString();
+      setNewStartDate(new Date(newStartDate));
+    }
+  }, [startValue]);
+
+  useEffect(() => {
+    if (endValue) {
+      const newEndDate = endValue.toISOString();
+      setNewEndDate(new Date(newEndDate));
+    }
+  }, [endValue]);
+
+  const aproveDate = async () => {
+    setIsLoading(true);
+    console.log("Approved new start date:", newStartDate);
+    console.log("Approved new start date:", newEndDate);
+    if (newStartDate === undefined || newEndDate === undefined) {
+      console.log("nust choose date and time");
+      setIsLoading(false);
+      return;
+    }
+    if (newStartDate > newEndDate) {
+      console.log("Error: start date is after end date"); // TODO: add error message
+      setIsLoading(false);
+      return;
+    }
+    const newDate = {
+      start_date: newStartDate,
+      end_date: newEndDate,
+    };
+    const res = await EventApi.updateEventDate(context?.eventId ?? "", newDate);
+    if (typeof res === "number") {
+      console.log("Error Updating Event"); // TODO: error message, ask to try again
+    }
+    setIsEditing(false);
+    setUpdatePage(!updatePage);
+    setStartValue(null);
+
+    setEndValue(null);
+    setNewStartDate(new Date(eventData.start_date));
+    setNewEndDate(new Date(eventData.end_date));
+    setIsLoading(false);
+  };
+
+  // edit event on click will update using newDate
 
   // const eventData = {
   //   title: "Maccabi Haifa match",
@@ -93,22 +166,74 @@ export function EventPage() {
               <Text size={"lg"} ta={"center"} mt={"xl"} mb={"lg"} fw={"470"}>
                 {eventData?.description}
               </Text>
-              <div className={classes.details_tickets_wrapper}>
-                <div className={classes.details_card}>
-                  <Title className={classes.sub_title}>Event Details:</Title>
-                  <Text>{eventData?.location}</Text>
-                  <Text>
-                    {formatTime(eventData?.start_date, eventData?.end_date)}
-                  </Text>
-
-                  <Text>{formatDate(eventData?.start_date)}</Text>
+              {!isEditing && (
+                <div className={classes.details_tickets_wrapper}>
+                  <div className={classes.details_card}>
+                    <Title className={classes.sub_title}>Event Details:</Title>
+                    <Text>{eventData?.location}</Text>
+                    <Text>
+                      Starts at: {formatDate(eventData?.start_date)} ,{" "}
+                      {formatTime(eventData?.start_date)}
+                    </Text>
+                    <Text>
+                      Ends at: {formatDate(eventData?.end_date)} ,{" "}
+                      {formatTime(eventData?.end_date)}
+                    </Text>
+                  </div>
+                  <div className={classes.details_card}>
+                    <Title className={classes.sub_title}>Tickets:</Title>
+                    <Text> Start From: {minPrice}$</Text>
+                    <Text>Available Tickets:</Text>
+                    <Text>{sumTickets}</Text>
+                  </div>
                 </div>
-                <div className={classes.details_card}>
-                  <Title className={classes.sub_title}>Tickets:</Title>
-                  <Text> Start From: {minPrice}$</Text>
-                  <Text>Available Tickets:</Text>
-                  <Text>{sumTickets}</Text>
-                </div>
+              )}
+              {isEditing && (
+                <DateTimePicker
+                  label="Start Date:"
+                  dropdownType="modal"
+                  minDate={
+                    new Date(new Date(eventData?.start_date).getTime() + 60000) // add one minute to the start date
+                  }
+                  placeholder="can only be posponed to a later date"
+                  value={startValue}
+                  onChange={setStartValue}
+                />
+              )}
+              {isEditing && (
+                <DateTimePicker
+                  label="End Date"
+                  dropdownType="modal"
+                  minDate={
+                    startValue
+                      ? new Date(new Date(startValue).getTime() + 60000)
+                      : new Date(
+                          new Date(eventData?.start_date).getTime() + 60000
+                        )
+                  }
+                  placeholder="can only be later than the start date"
+                  value={endValue}
+                  onChange={setEndValue}
+                />
+              )}
+              {isEditing && (
+                <Button my="lg" onClick={aproveDate}>
+                  Change Date
+                </Button>
+              )}
+              <div className={classes.edit_wrapper}>
+                {(context?.permission == "A" || context?.permission == "M") &&
+                  !isEditing && (
+                    <Button
+                      fullWidth
+                      mt="lg"
+                      onClick={() => {
+                        setIsEditing(true);
+                      }}
+                    >
+                      Edit Event
+                    </Button>
+                  )}
               </div>
             </div>
             <img

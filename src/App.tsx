@@ -52,10 +52,6 @@ function App() {
   });
 
   useEffect(() => {
-    setPermission("U");
-  }, []);
-
-  useEffect(() => {
     navigateTo(window.location.pathname.split("/").pop() || "signin");
   }, []);
 
