@@ -202,7 +202,7 @@ export function EventPage() {
               )}
               {isEditing && (
                 <DateTimePicker
-                  label="End Date"
+                  label="End Date:"
                   dropdownType="modal"
                   minDate={
                     startValue

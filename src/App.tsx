@@ -81,10 +81,11 @@ function App() {
 
   const navigateTo = (newRoute: string) => {
     setRoute(newRoute);
-    const componentPostfix = newRoute;
-    const currentPath = window.location.pathname;
-    const newPath = currentPath.replace(/\/[^/]*$/, `/${componentPostfix}`);
-    window.history.pushState({}, "", newPath);
+    // uncomment for URL pagename postfix
+    // const componentPostfix = newRoute;
+    // const currentPath = window.location.pathname;
+    // const newPath = currentPath.replace(/\/[^/]*$/, `/${componentPostfix}`);
+    // window.history.pushState({}, "", newPath);
   };
   const navigationValues: NavigationContextType = {
     navigateTo: navigateTo,
