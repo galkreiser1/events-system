@@ -1,4 +1,4 @@
-import { Table, Title, Container, Accordion } from "@mantine/core";
+import { Table, Title, Container, Accordion, Pagination } from "@mantine/core";
 import { SmallEventCard } from "./smalleventcard/smalleventcard";
 import "./UserSpace.css";
 import { useEffect, useState } from "react";
@@ -11,8 +11,18 @@ export function UserSpace() {
   const [orders, setOrders] = useState<any[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
 
   const navigator = useNavigation();
+
+  const chunk = (array: any, size: number): any => {
+    if (!array.length) {
+      return [];
+    }
+    const head = array.slice(0, size);
+    const tail = array.slice(size);
+    return [head, ...chunk(tail, size)];
+  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -49,7 +59,10 @@ export function UserSpace() {
     navigator?.navigateTo("error-page");
   }
 
-  const rows = orders.map((order: any, index) => (
+  const ordersChunk = chunk(orders, 9);
+  const ordersToDisplay = ordersChunk[currentPage - 1] || [];
+
+  const rows = ordersToDisplay.map((order: any, index: any) => (
     <Table.Tr key={index} className="row">
       <Table.Td>
         {new Date(order.checkout_date).toLocaleDateString("en-GB", {
@@ -99,6 +112,12 @@ export function UserSpace() {
           </Table.Thead>
           <Table.Tbody>{rows}</Table.Tbody>
         </Table>
+        <Pagination
+          total={ordersChunk.length}
+          value={currentPage}
+          onChange={setCurrentPage}
+          mt="sm"
+        />
       </Container>
     </>
   );
