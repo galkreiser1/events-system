@@ -80,9 +80,23 @@ export function Catalog() {
     }
   };
 
+  const handleFetchData = async () => {
+    const result = await EventApi.getAllEvents(page);
+    if (typeof result !== "number") {
+      if (result.length === 0) {
+        setHasMore(false);
+      } else {
+        setEvents((prevEvents) => [...prevEvents, ...result]);
+        setPage(page + 1);
+        setMaxValue(getMaxPrice(events));
+        setValue([0, getMaxPrice(events)]);
+      }
+    }
+  };
+
   useEffect(() => {
     const fetchData = async () => {
-      const result = await EventApi.getAllEvents(page);
+      let result = await EventApi.getAllEvents(page);
       if (typeof result === "number") {
         setLoading(false);
         handleResultError(result);
@@ -90,16 +104,26 @@ export function Catalog() {
         if (result.length === 0) {
           setHasMore(false);
         } else {
-          setEvents(result);
+          if (context?.permission === "U") {
+            result = result.filter((event: any) => {
+              return new Date(event.start_date) >= new Date();
+            });
+          }
+
+          result = result.filter((event: any) => {
+            return !events.find((e: any) => e._id === event._id);
+          });
+
+          setEvents([...events, ...result]);
           setPage(page + 1);
         }
-        setMaxValue(getMaxPrice(result));
-        setValue([0, getMaxPrice(result)]);
+        setMaxValue(getMaxPrice(events));
+        setValue([0, getMaxPrice(events)]);
         setLoading(false);
       }
     };
 
-    if (events.length === 0 && hasMore) {
+    if (events.length < 9 && hasMore) {
       setError("");
       fetchData();
     }
@@ -132,18 +156,6 @@ export function Catalog() {
     navigator?.navigateTo("error-page");
   }
 
-  const handleFetchData = async () => {
-    const result = await EventApi.getAllEvents(page);
-    if (typeof result !== "number") {
-      if (result.length === 0) {
-        setHasMore(false);
-      } else {
-        setEvents((prevEvents) => [...prevEvents, ...result]);
-        setPage(page + 1);
-      }
-    }
-  };
-
   const cards = events.map((event: any) => {
     const availableTickets = event.tickets.filter(
       (ticket: any) => ticket.quantity > 0
@@ -166,7 +178,17 @@ export function Catalog() {
     };
   });
 
-  const sortedCards = cards
+  const filteredCards = cards.filter((event: any) => {
+    return new Date(event.start_date) >= new Date();
+  });
+
+  const chosenCards = context?.permission === "U" ? filteredCards : cards;
+
+  // if (chosenCards.length < 9 && hasMore) {
+  //   handleFetchData();
+  // }
+
+  const sortedCards = chosenCards
     .filter((event: any) => {
       return (
         event.start_price >= endValue[0] && event.start_price <= endValue[1]
