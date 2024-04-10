@@ -100,7 +100,7 @@ export function UserSpace() {
       <Title mb={100} ta="center">
         Order History
       </Title>
-      <Container size="lg">
+      <Container size="lg" mb={30}>
         <Table withTableBorder>
           <Table.Thead>
             <Table.Tr>
