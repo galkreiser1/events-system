@@ -89,8 +89,15 @@ export function UserBar() {
   };
 
   const handleBackButton = () => {
-    if (context?.route !== "catalog") {
-      window.history.back();
+    switch (context?.route) {
+      case "catalog":
+        break;
+      case "checkout":
+        navigator?.navigateTo("event-page");
+        break;
+      default:
+        navigator?.navigateTo("catalog");
+        break;
     }
   };
 
