@@ -27,10 +27,16 @@ export function SuccessPage() {
           Total: ${context?.successData.total}
         </Text>
       </Container>
-
-      <Button onClick={() => navigator?.navigateTo("catalog")} size="md">
-        Take me back to home page
-      </Button>
+      <Group justify="center">
+        <Button
+          onClick={() => {
+            navigator?.navigateTo("catalog");
+          }}
+          size="md"
+        >
+          Take me back to home page
+        </Button>
+      </Group>
     </Container>
   );
 }

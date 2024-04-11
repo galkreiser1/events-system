@@ -32,12 +32,6 @@ export function Checkout() {
   const navigator = useNavigation();
   const [loadingRollback, setLoadingRollback] = useState(false);
 
-  useEffect(() => {
-    if (coupon) {
-      activateCoupon(coupon);
-    }
-  }, [coupon]);
-
   const orderData = [
     { title: "Event:", description: context?.orderData?.event_title },
     {
