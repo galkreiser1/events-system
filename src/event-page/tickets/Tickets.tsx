@@ -59,20 +59,19 @@ export function Tickets({
     changeLoading(index, true);
     const updatedEvent = await EventApi.getEvent(context?.eventId || "");
 
-    // check if enough tickets available:
-    // if (updatedEvent?.tickets[index]?.quantity < numOfTickets) {
-    //   console.log("Not enough tickets available");
-    //   setTicketsData(updatedEvent?.tickets);
-    //   changeLoading(index, false);
-    //   return;
-    // }
-
     // check if event dates have changed:
     if (updatedEvent?.date !== eventData.date) {
-      console.log("Event dates have changed");
+      console.log("Event dates have changed"); // TODO: add error message
       setEventData(updatedEvent);
       changeLoading(index, false);
 
+      return;
+    }
+    // check if enough tickets available:
+    if (updatedEvent?.tickets[index]?.quantity < numOfTickets) {
+      console.log("Not enough tickets available"); // TODO: add error message
+      setTicketsData(updatedEvent?.tickets);
+      changeLoading(index, false);
       return;
     }
 
@@ -97,6 +96,7 @@ export function Tickets({
         ticket_type: ticketsData?.[index]?.type || "",
         quantity: Number(numOfTickets),
         price: Number(ticketsData?.[index]?.price) || 0,
+        ticket_index: index,
       };
       context?.setOrderData(orderData);
       console.log(context?.orderData);
@@ -106,7 +106,7 @@ export function Tickets({
       // TODO FOR GAL: if (res === APIStatus.NotEnoughTickets)
       console.log("Error buying tickets");
       setTicketsData(updatedEvent?.tickets);
-      //setEventData(updatedEvent); // TODO: update event data or only tickes data?
+      // setEventData(updatedEvent); // TODO: update event data or only tickes data?
       changeLoading(index, false);
       return;
     }
