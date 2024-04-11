@@ -2,7 +2,6 @@ import { Card, Image, Text, Group, Badge, Button } from "@mantine/core";
 import "./eventcard.css";
 import React from "react";
 import { sessionContext, useNavigation } from "../../../App";
-// import { Link } from "react-router-dom";
 
 type EventCardProps = {
   id: string;

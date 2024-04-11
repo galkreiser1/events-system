@@ -8,6 +8,8 @@ import {
   BUY_PATH,
 } from "../const";
 
+import { couponType } from "../types";
+
 const SERVER_URL = IS_LOCAL ? LOCAL_SERVER_URL : USERS_SERVER_URL;
 
 export const PaymentApi = {
@@ -29,7 +31,7 @@ export const PaymentApi = {
       return handleError(e.response.status);
     }
   },
-  createCoupon: async (coupon: any): Promise<APIStatus> => {
+  createCoupon: async (coupon: couponType): Promise<APIStatus> => {
     try {
       const res = await axios.post(SERVER_URL + CREATE_COUPON_PATH, coupon, {
         withCredentials: true,
@@ -49,7 +51,7 @@ export const PaymentApi = {
     ticket_type: string,
     quantity: Number,
     payment_details: any,
-    coupon_code = undefined
+    coupon_code: string | undefined = undefined
   ): Promise<APIStatus> => {
     try {
       const res = await axios.post(

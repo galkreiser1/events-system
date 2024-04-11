@@ -18,8 +18,9 @@ import { useNavigation, sessionContext } from "../../App";
 import { GoArrowDown, GoArrowUp } from "react-icons/go";
 import InfiniteScroll from "react-infinite-scroll-component";
 import { Loader as LegacyLoader } from "../../loader/Loader";
+import { eventType, ticketsDataType } from "../../types";
 
-const getMaxPrice = (events: any) => {
+const getMaxPrice = (events: eventType[]) => {
   const cards = events.map((event: any) => {
     const availableTickets = event.tickets.filter(
       (ticket: any) => ticket.quantity > 0
@@ -27,11 +28,11 @@ const getMaxPrice = (events: any) => {
     let minPrice = 0;
     if (availableTickets.length > 0) {
       minPrice = Math.min(
-        ...availableTickets.map((ticket: any) => 0 + ticket.price)
+        ...availableTickets.map((ticket: ticketsDataType) => 0 + ticket.price)
       );
     }
     const totalQuantity = availableTickets.reduce(
-      (acc: number, ticket: any) => acc + ticket.quantity,
+      (acc: number, ticket: ticketsDataType) => acc + ticket.quantity,
       0
     );
 
@@ -54,7 +55,7 @@ const getMaxPrice = (events: any) => {
 };
 
 export function Catalog() {
-  const [events, setEvents] = useState<any[]>([]);
+  const [events, setEvents] = useState<eventType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const navigator = useNavigation();
@@ -121,8 +122,8 @@ export function Catalog() {
           //   });
           // }
 
-          result = result.filter((event: any) => {
-            return !events.find((e: any) => e._id === event._id);
+          result = result.filter((event: eventType) => {
+            return !events.find((e: eventType) => e._id === event._id);
           });
 
           if (page === 1) {
@@ -171,9 +172,9 @@ export function Catalog() {
     navigator?.navigateTo("error-page");
   }
 
-  const cards = events.map((event: any) => {
+  const cards = events.map((event: eventType) => {
     const availableTickets = event.tickets.filter(
-      (ticket: any) => ticket.quantity > 0
+      (ticket: ticketsDataType) => ticket.quantity > 0
     );
     let minPrice = 0;
     if (availableTickets.length > 0) {
@@ -182,7 +183,7 @@ export function Catalog() {
       );
     }
     const totalQuantity = availableTickets.reduce(
-      (acc: number, ticket: any) => acc + ticket.quantity,
+      (acc: number, ticket: ticketsDataType) => acc + ticket.quantity,
       0
     );
 
@@ -193,7 +194,7 @@ export function Catalog() {
     };
   });
 
-  const filteredCards = cards.filter((event: any) => {
+  const filteredCards = cards.filter((event: eventType) => {
     return new Date(event.start_date) >= new Date();
   });
 

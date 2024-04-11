@@ -3,12 +3,12 @@ import { SmallEventCard } from "./smalleventcard/smalleventcard";
 import "./UserSpace.css";
 import { useEffect, useState } from "react";
 import { OrderApi } from "../../api/orderApi";
-import { APIStatus } from "../../types";
+import { APIStatus, userSpaceOrderType } from "../../types";
 import { useNavigation } from "../../App";
 import { Loader } from "../../loader/Loader";
 
 export function UserSpace() {
-  const [orders, setOrders] = useState<any[]>([]);
+  const [orders, setOrders] = useState<userSpaceOrderType[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string>("");
   const [currentPage, setCurrentPage] = useState<number>(1);
@@ -62,7 +62,7 @@ export function UserSpace() {
   const ordersChunk = chunk(orders, 9);
   const ordersToDisplay = ordersChunk[currentPage - 1] || [];
 
-  const rows = ordersToDisplay.map((order: any, index: any) => (
+  const rows = ordersToDisplay.map((order: userSpaceOrderType, index: any) => (
     <Table.Tr key={index} className="row">
       <Table.Td>
         {new Date(order.checkout_date).toLocaleDateString("en-GB", {

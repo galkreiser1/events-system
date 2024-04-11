@@ -8,6 +8,8 @@ import {
   IS_LOCAL,
 } from "../const";
 
+import { eventType } from "../types";
+
 const SERVER_URL = IS_LOCAL ? LOCAL_SERVER_URL : USERS_SERVER_URL;
 
 export const EventApi = {
@@ -44,7 +46,7 @@ export const EventApi = {
       return handleError(e.response.status);
     }
   },
-  createEvent: async (event: any): Promise<APIStatus> => {
+  createEvent: async (event: eventType): Promise<APIStatus> => {
     try {
       const res = await axios.post(SERVER_URL + CREATE_EVENT_PATH, event, {
         withCredentials: true,

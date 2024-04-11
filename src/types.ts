@@ -33,3 +33,29 @@ export type orderDataType = {
   quantity: number;
   price: number;
 };
+
+export type eventType = {
+  _id: string;
+  title: string;
+  category: string;
+  description: string;
+  organizer: string;
+  start_date: Date;
+  end_date: Date;
+  location: string;
+  tickets: ticketsDataType[];
+  image: string;
+};
+
+export type userSpaceOrderType = {
+  checkout_date: string;
+  event: eventType;
+  quantity: number;
+  ticket_type: string;
+  _id: string;
+};
+
+export type couponType = {
+  code: string;
+  discount: number;
+};
