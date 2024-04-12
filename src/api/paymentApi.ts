@@ -52,7 +52,7 @@ export const PaymentApi = {
     quantity: Number,
     payment_details: any,
     coupon_code: string | undefined = undefined
-  ): Promise<APIStatus> => {
+  ): Promise<APIStatus | any> => {
     try {
       const res = await axios.post(
         SERVER_URL + BUY_PATH,
@@ -62,7 +62,7 @@ export const PaymentApi = {
         }
       );
       if (res.status === 201) {
-        return APIStatus.Success;
+        return res.data;
       } else {
         return handleError(res.status);
       }

@@ -20,7 +20,7 @@ export const Timer = ({ onComplete }: { onComplete: () => void }) => {
       <div className="timer-wrapper">
         <CountdownCircleTimer
           duration={120}
-          colors={["#64BBDD", "#F7B801", "#A30000", "#A30000"]}
+          colors={["#62b1f6", "#F7B801", "#A30000", "#A30000"]}
           colorsTime={[120, 60, 10, 0]}
           onComplete={handleTimeOut}
           isPlaying={isPlaying}
@@ -32,9 +32,12 @@ export const Timer = ({ onComplete }: { onComplete: () => void }) => {
               <div className="text">
                 Tickets <br /> saved for
                 <div className="value">
-                  {String(remainingTime.remainingTime)}
+                  {`${Math.floor(remainingTime.remainingTime / 60)
+                    .toString()
+                    .padStart(2, "0")}:${(remainingTime.remainingTime % 60)
+                    .toString()
+                    .padStart(2, "0")}`}
                 </div>
-                <div className="text">seconds</div>
               </div>
             ) : (
               <div className="not-saved-text">

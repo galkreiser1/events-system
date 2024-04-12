@@ -5,6 +5,7 @@ import {
   Button,
   Group,
   SimpleGrid,
+  Loader,
 } from "@mantine/core";
 import { OrderSummaryList } from "./OrderSummary";
 import classes from "./Checkout.module.css";
@@ -15,29 +16,39 @@ import { useContext, useEffect, useState } from "react";
 import { sessionContext } from "../App";
 import { Timer } from "./Timer";
 import { EventApi } from "../api/eventApi";
+import { PaymentApi } from "../api/paymentApi";
+import { APIStatus, successDataType } from "../types";
+import { useNavigation } from "../App";
 
 export function Checkout() {
-  const [coupon, setCoupon] = useState("");
+  const [coupon, setCoupon] = useState<string>("");
+  const [activatedCoupon, setActivatedCoupon] = useState<string | undefined>(
+    undefined
+  );
   const [discount, setDiscount] = useState(0);
+  const [couponLoading, setCouponLoading] = useState(false);
+  const [buyLoading, setBuyLoading] = useState(false);
   const context = useContext(sessionContext);
+  const navigator = useNavigation();
+  const [loadingRollback, setLoadingRollback] = useState(false);
 
   const orderData = [
-    { title: "Event:", description: context?.orderData.event_title },
+    { title: "Event:", description: context?.orderData?.event_title },
     {
       title: "Tickets:",
-      description: `${context?.orderData.quantity} x ${context?.orderData.ticket_type}`,
+      description: `${context?.orderData?.quantity} x ${context?.orderData?.ticket_type}`,
     },
     {
       title: "Original Price:",
       description: `${
-        (context?.orderData.price ?? 0) * (context?.orderData.quantity ?? 0)
+        (context?.orderData?.price ?? 0) * (context?.orderData?.quantity ?? 0)
       }$`,
     },
     { title: "Discount:", description: "0$" },
     {
       title: "Price After Discount:",
       description: `${
-        (context?.orderData.price ?? 0) * (context?.orderData.quantity ?? 0)
+        (context?.orderData?.price ?? 0) * (context?.orderData?.quantity ?? 0)
       }$`,
     },
   ];
@@ -76,15 +87,74 @@ export function Checkout() {
     console.log(orderDetails);
   }, [discount]);
 
-  const activateCoupon = (coupon: string) => {
-    if (coupon === "maccabi") {
-      setDiscount(30);
-      console.log("Coupon Activated");
+  const activateCoupon = async (coupon: string) => {
+    setCouponLoading(true);
+    const couponData = await PaymentApi.getCoupon(coupon);
+    console.log(couponData);
+    if (typeof couponData === "number") {
+      console.log("Invalid Coupon"); // TODO: Add error message
+      setCouponLoading(false);
+      return;
     }
+    setActivatedCoupon(coupon);
+    setCouponLoading(false);
+    setDiscount(couponData.discount);
+    console.log("Coupon Activated");
+    return;
   };
 
-  const handleFormSubmit = () => {
+  const handleFormSubmit = async () => {
+    setBuyLoading(true);
     console.log("Payment Details:", paymentDetails);
+    const event = await EventApi.getEvent(context?.eventId ?? "");
+
+    // check if enough tickets are available, only if timer expired
+    // if (
+    //   event?.tickets[context?.orderData?.ticket_index || 0]?.quantity <
+    //   (context?.orderData.quantity ?? 0)
+    // ) {
+    //   setBuyLoading(false);
+    //   console.log("Not enough tickets available"); // TODO: Add error message
+    //   return;
+    // }
+
+    const res = await PaymentApi.Buy(
+      event,
+      context?.orderData?.ticket_type ?? "",
+      context?.orderData?.quantity ?? 0,
+      paymentDetails,
+      activatedCoupon
+    );
+
+    if (res === APIStatus.Conflict) {
+      setBuyLoading(false);
+      console.log("Dates have changed, go back to check updated event details"); // TODO: Add error message
+      return;
+    }
+
+    if (typeof res === "number") {
+      setBuyLoading(false);
+      console.log("Payment Failed:", res); // TODO: Add error message "Try again"
+      return;
+    }
+    if (typeof res === "object") {
+      // type of res is res.data, meaning payment was successful
+      const payment_id = res.order_id;
+
+      const successData: successDataType = {
+        payment_id: payment_id,
+        event_title: context?.orderData?.event_title ?? "",
+        ticket_type: context?.orderData?.ticket_type ?? "",
+        quantity: context?.orderData?.quantity ?? 0,
+        total: paymentDetails.charge,
+      };
+
+      context?.setSuccessData(successData);
+
+      setBuyLoading(false);
+      console.log("Payment Successful");
+      navigator?.navigateTo("success");
+    }
   };
 
   const handleInputChange = (event: { target: { name: any; value: any } }) => {
@@ -94,6 +164,7 @@ export function Checkout() {
 
   //TODO: add form validations
   const handleRollBack = async () => {
+    setLoadingRollback(true);
     console.log("Rolling back");
     const ticketsToRollBack = {
       ticket_type: context?.orderData.ticket_type ?? "",
@@ -107,6 +178,8 @@ export function Checkout() {
       `RolledBack ${ticketsToRollBack.quantity} tickets of type ${ticketsToRollBack.ticket_type} `,
       res
     );
+    setLoadingRollback(false);
+    navigator?.navigateTo("event-page");
   };
 
   return (
@@ -119,7 +192,8 @@ export function Checkout() {
         height: "80vh",
       }}
     >
-      <Timer onComplete={handleRollBack} />
+      {!loadingRollback && <Timer onComplete={handleRollBack} />}
+      {loadingRollback && <Loader />}
       <Paper shadow="md" radius="lg">
         <div className={classes.wrapper}>
           <div
@@ -193,8 +267,9 @@ export function Checkout() {
                   }}
                 />
                 <Button
+                  loading={couponLoading}
                   className={classes.controlcpn}
-                  onClick={() => activateCoupon(coupon)}
+                  onClick={() => activateCoupon(coupon ?? "")}
                 >
                   Activate
                 </Button>
@@ -205,6 +280,7 @@ export function Checkout() {
                   type="submit"
                   className={classes.control}
                   onClick={handleFormSubmit}
+                  loading={buyLoading}
                 >
                   Buy Now
                 </Button>

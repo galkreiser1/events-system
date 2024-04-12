@@ -32,6 +32,15 @@ export type orderDataType = {
   ticket_type: string;
   quantity: number;
   price: number;
+  ticket_index: number | undefined;
+};
+
+export type successDataType = {
+  payment_id: string;
+  event_title: string;
+  ticket_type: string;
+  quantity: number;
+  total: number;
 };
 
 export type eventType = {

@@ -11,8 +11,9 @@ import { EventForm } from "./components/eventform/eventform";
 import { UserBar } from "./components/userbar/UserBar";
 import { CouponForm } from "./components/couponform/couponform";
 import { ErrorPage } from "./components/errorpage/errorpage";
-import { orderDataType } from "./types";
+import { orderDataType, successDataType } from "./types";
 import { AuthApi } from "./api/authApi";
+import { SuccessPage } from "./success_page/SuccessPage";
 // import { SuccessPage } from "./success_page/SuccessPage";
 
 export interface sessionContextType {
@@ -25,6 +26,8 @@ export interface sessionContextType {
   route: string;
   orderData: orderDataType;
   setOrderData: React.Dispatch<React.SetStateAction<orderDataType>>;
+  successData: successDataType;
+  setSuccessData: React.Dispatch<React.SetStateAction<successDataType>>;
 }
 export const sessionContext = React.createContext<sessionContextType | null>(
   null
@@ -49,6 +52,15 @@ function App() {
     ticket_type: "",
     quantity: 0,
     price: 0,
+    ticket_index: undefined,
+  });
+
+  const [successData, setSuccessData] = useState<successDataType>({
+    payment_id: "",
+    event_title: "",
+    ticket_type: "",
+    quantity: 0,
+    total: 0,
   });
 
   useEffect(() => {
@@ -101,6 +113,8 @@ function App() {
     route,
     orderData,
     setOrderData,
+    successData,
+    setSuccessData,
   };
 
   //TODO: navigation through URL input
@@ -121,6 +135,7 @@ function App() {
         {route === "eventform" && <EventForm />}
         {route === "couponform" && <CouponForm />}
         {route === "error-page" && <ErrorPage />}
+        {route === "success" && <SuccessPage />}
       </NavigationContext.Provider>
     </sessionContext.Provider>
   );
