@@ -49,8 +49,9 @@ export function EventForm() {
         value.trim().length < 1 ? "Organizer can't be empty" : null,
       location: (value) =>
         value.trim().length < 1 ? "Location can't be empty" : null,
-      start_date: (value) =>
-        value === null ? "Start date can't be empty" : null,
+      start_date: (value) => {
+        value === null ? "Start date can't be empty" : null;
+      },
       end_date: (value) => (value === null ? "End date can't be empty" : null),
       image: (value) =>
         value.trim().length < 1 ? "Img URL can't be empty" : null,
@@ -74,6 +75,9 @@ export function EventForm() {
   };
 
   const handleAddInput = () => {
+    if (inputs.length === 10) {
+      return;
+    }
     const values = [...inputs, { type: "Normal", price: 0, quantity: 0 }];
     setInputs(values);
   };
@@ -135,10 +139,37 @@ export function EventForm() {
     return hasError;
   };
 
+  const checkSameTicket = () => {
+    const typeCount: any = {};
+
+    inputs.forEach((input) => {
+      const { type } = input;
+      typeCount[type] = (typeCount[type] || 0) + 1;
+    });
+
+    for (const type in typeCount) {
+      if (typeCount[type] > 1) {
+        return true;
+      }
+    }
+    return false;
+  };
+
   const handleSubmit = async (values: any) => {
     if (checkTicketInputs()) {
       return;
     }
+
+    if (checkSameTicket()) {
+      setError("Ticket types must be unique");
+      return;
+    }
+
+    if (new Date(values.start_date) > new Date(values.end_date)) {
+      setError("Start date must be before end date");
+      return;
+    }
+
     const combined_values = { ...values, tickets: inputs };
     combined_values.category = combined_values.category
       ? combined_values.category

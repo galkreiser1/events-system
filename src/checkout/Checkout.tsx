@@ -118,6 +118,15 @@ export function Checkout() {
     //   return;
     // }
 
+    if (context?.lockId) {
+      await EventApi.unlockTicket(
+        context?.lockId,
+        context?.eventId,
+        context?.orderData?.ticket_type,
+        context?.orderData?.quantity
+      );
+    }
+
     const res = await PaymentApi.Buy(
       event,
       context?.orderData?.ticket_type ?? "",
@@ -166,18 +175,18 @@ export function Checkout() {
   const handleRollBack = async () => {
     setLoadingRollback(true);
     console.log("Rolling back");
-    const ticketsToRollBack = {
-      ticket_type: context?.orderData.ticket_type ?? "",
-      quantity: -(context?.orderData.quantity ?? 0),
-    };
-    const res = await EventApi.updateEventTicket(
-      context?.eventId ?? "",
-      ticketsToRollBack
-    );
-    console.log(
-      `RolledBack ${ticketsToRollBack.quantity} tickets of type ${ticketsToRollBack.ticket_type} `,
-      res
-    );
+    // const ticketsToRollBack = {
+    //   ticket_type: context?.orderData.ticket_type ?? "",
+    //   quantity: -(context?.orderData.quantity ?? 0),
+    // };
+    // const res = await EventApi.updateEventTicket(
+    //   context?.eventId ?? "",
+    //   ticketsToRollBack
+    // );
+    // console.log(
+    //   `RolledBack ${ticketsToRollBack.quantity} tickets of type ${ticketsToRollBack.ticket_type} `,
+    //   res
+    // );
     setLoadingRollback(false);
     navigator?.navigateTo("event-page");
   };

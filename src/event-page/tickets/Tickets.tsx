@@ -88,10 +88,12 @@ export function Tickets({
       ticketsToBuy.quantity
     );
 
-    if (res === APIStatus.Success) {
+    if (typeof res !== "number") {
       console.log(
         `Buying ${numOfTickets} tickets for ${ticketsData?.[index]?.type}`
       );
+
+      context?.setLockId(res.lock_id);
 
       const orderData = {
         event_id: context?.eventId || "",

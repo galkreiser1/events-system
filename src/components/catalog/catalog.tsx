@@ -98,11 +98,12 @@ export function Catalog() {
         //   return !events.find((e: any) => e._id === event._id);
         // });
         setEvents([...events, ...result]);
-        // console.log("fetch data events after results: ", events);
         setPage(page + 1);
         setMaxValue(getMaxPrice(events));
         setValue([0, getMaxPrice(events)]);
       }
+    } else {
+      handleResultError(result);
     }
   };
 
@@ -143,6 +144,17 @@ export function Catalog() {
       setError("");
       fetchData();
     }
+  }, [events]);
+
+  useEffect(() => {
+    // events.map((event: eventType) => {
+    //   event.tickets.map((ticket: ticketsDataType) => {
+    //     console.log("ticket price: ", ticket.price);
+    //   });
+    // });
+    const maxPrice = getMaxPrice(events);
+    setMaxValue(maxPrice);
+    setValue([0, maxPrice]);
   }, [events]);
 
   useEffect(() => {

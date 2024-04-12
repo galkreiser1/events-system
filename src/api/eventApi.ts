@@ -116,7 +116,7 @@ export const EventApi = {
         withCredentials: true,
       });
       if (res.status === 201) {
-        return APIStatus.Success;
+        return res.data;
       } else {
         return handleError(res.status);
       }
@@ -132,9 +132,13 @@ export const EventApi = {
   ): Promise<any | APIStatus> => {
     try {
       const unlockData = { lock_id, event_id, type, quantity };
-      const res = await axios.post(`${SERVER_URL}/api/event/lock`, unlockData, {
-        withCredentials: true,
-      });
+      const res = await axios.post(
+        `${SERVER_URL}/api/event/unlock`,
+        unlockData,
+        {
+          withCredentials: true,
+        }
+      );
       if (res.status === 200) {
         return APIStatus.Success;
       } else {

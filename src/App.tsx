@@ -14,20 +14,21 @@ import { ErrorPage } from "./components/errorpage/errorpage";
 import { orderDataType, successDataType } from "./types";
 import { AuthApi } from "./api/authApi";
 import { SuccessPage } from "./success_page/SuccessPage";
-// import { SuccessPage } from "./success_page/SuccessPage";
 
 export interface sessionContextType {
   permission: string;
   setPermission: React.Dispatch<React.SetStateAction<string>>;
   username: string;
   setUsername: React.Dispatch<React.SetStateAction<string>>;
-  eventId?: string;
-  setEventId?: React.Dispatch<React.SetStateAction<string>>;
+  eventId: string;
+  setEventId: React.Dispatch<React.SetStateAction<string>>;
   route: string;
   orderData: orderDataType;
   setOrderData: React.Dispatch<React.SetStateAction<orderDataType>>;
   successData: successDataType;
   setSuccessData: React.Dispatch<React.SetStateAction<successDataType>>;
+  lockId: string;
+  setLockId: React.Dispatch<React.SetStateAction<string>>;
 }
 export const sessionContext = React.createContext<sessionContextType | null>(
   null
@@ -46,6 +47,7 @@ function App() {
   const [permission, setPermission] = useState<string>("U");
   const [username, setUsername] = useState<string>("");
   const [eventId, setEventId] = useState<string>("");
+  const [lockId, setLockId] = useState<string>("");
   const [orderData, setOrderData] = useState<orderDataType>({
     event_id: "",
     event_title: "",
@@ -115,6 +117,8 @@ function App() {
     setOrderData,
     successData,
     setSuccessData,
+    lockId,
+    setLockId,
   };
 
   //TODO: navigation through URL input
@@ -125,6 +129,7 @@ function App() {
         {route !== "signin" &&
           route !== "signup" &&
           route !== "error-page" &&
+          route !== "success" &&
           username && <UserBar />}
         {route === "signin" && <SignIn />}
         {route === "signup" && <SignUp />}
