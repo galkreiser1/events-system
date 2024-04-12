@@ -81,9 +81,12 @@ export function Tickets({
       quantity: numOfTickets,
     };
 
-    const res = await EventApi.updateEventTicket(
-      context?.eventId ?? "",
-      ticketsToBuy
+    const event_id = context?.eventId ? context.eventId : "";
+    const type = ticketsData?.[index]?.type ? ticketsData[index].type : "";
+    const res = await EventApi.lockTicket(
+      event_id,
+      type,
+      ticketsToBuy.quantity
     );
 
     if (res === APIStatus.Success) {
@@ -103,8 +106,11 @@ export function Tickets({
       changeLoading(index, false);
       navigator?.navigateTo("checkout");
     } else {
-      // TODO FOR GAL: if (res === APIStatus.NotEnoughTickets)
-      console.log("Error buying tickets");
+      if (res === APIStatus.BadRequest) {
+        console.log("Not enough tickets available");
+      } else {
+        console.log("Error buying tickets");
+      }
       setTicketsData(updatedEvent?.tickets);
       //setEventData(updatedEvent); // TODO: update event data or only tickes data?
       changeLoading(index, false);

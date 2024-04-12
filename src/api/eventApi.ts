@@ -105,6 +105,45 @@ export const EventApi = {
       return handleError(e.response.status);
     }
   },
+  lockTicket: async (
+    event_id: string,
+    type: string,
+    quantity: Number
+  ): Promise<any | APIStatus> => {
+    try {
+      const lockData = { event_id, type, quantity };
+      const res = await axios.post(`${SERVER_URL}/api/event/lock`, lockData, {
+        withCredentials: true,
+      });
+      if (res.status === 201) {
+        return APIStatus.Success;
+      } else {
+        return handleError(res.status);
+      }
+    } catch (e: any) {
+      return handleError(e.response.status);
+    }
+  },
+  unlockTicket: async (
+    lock_id: string,
+    event_id: string,
+    type: string,
+    quantity: Number
+  ): Promise<any | APIStatus> => {
+    try {
+      const unlockData = { lock_id, event_id, type, quantity };
+      const res = await axios.post(`${SERVER_URL}/api/event/lock`, unlockData, {
+        withCredentials: true,
+      });
+      if (res.status === 200) {
+        return APIStatus.Success;
+      } else {
+        return handleError(res.status);
+      }
+    } catch (e: any) {
+      return handleError(e.response.status);
+    }
+  },
 };
 
 const handleError = async (e: unknown): Promise<APIStatus> => {
