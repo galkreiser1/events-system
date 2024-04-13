@@ -42,7 +42,21 @@ export function UserBar() {
         setNextEventError("Error Fetching Next Event");
       } else {
         setEventLoading(false);
-        setNextEvent(nextEventResult.next_event);
+        if (nextEventResult.next_event && nextEventResult.next_event.title) {
+          const start_date = new Date(
+            nextEventResult.next_event.start_date
+          ).toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+            hour12: false,
+          });
+          setNextEvent(`${nextEventResult.next_event.title} (${start_date})`);
+        } else {
+          setNextEvent("");
+        }
       }
       const couponResult = await UserApi.getNumofCoupons();
       if (typeof couponResult === "number") {
