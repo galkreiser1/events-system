@@ -7,8 +7,6 @@ import {
   API_GATEWAY_URL,
 } from "../const";
 
-// TODO: errors
-
 export const commentApi = {
   createComment: async (comment: any): Promise<APIStatus> => {
     try {
@@ -20,7 +18,7 @@ export const commentApi = {
         }
       );
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         return APIStatus.Success;
       } else {
         console.log(res);
@@ -73,10 +71,10 @@ export const commentApi = {
       if (res.status === 200) {
         return res.data;
       } else {
-        return handleError(res.status);
+        return -1;
       }
     } catch (e) {
-      return handleError(e);
+      return -1;
     }
   },
 };

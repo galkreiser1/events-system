@@ -9,6 +9,8 @@ import {
   ScrollArea,
   Button,
   Modal,
+  Notification,
+  rem,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { commentApi } from "../../api/commentApi";
@@ -17,6 +19,8 @@ import { Pagination } from "@mantine/core";
 import { CommentForm } from "./CommentForm/CommentForm";
 import { Loader } from "../../loader/Loader";
 import { sessionContext } from "../../App";
+import { IconX, IconCheck } from "@tabler/icons-react";
+
 export function Comment({ eventData }: { eventData: any }) {
   // const isUser = context.permissions == "U" ? true : false;
 
@@ -25,8 +29,12 @@ export function Comment({ eventData }: { eventData: any }) {
   const [page, setPage] = React.useState(1);
   const [totalPages, setTotalPages] = React.useState(1);
   const [numOfComments, setNumOfComments] = React.useState(0);
+  const [error, setError] = React.useState(false);
+  const [errorMessage, setErrorMessage] = React.useState("");
+  const [addedNewComment, setAddedNewComment] = React.useState(false);
 
   const context = useContext(sessionContext);
+  const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />;
 
   React.useEffect(() => {
     const fetchComments = async () => {
@@ -35,6 +43,18 @@ export function Comment({ eventData }: { eventData: any }) {
       const commentsNum = await commentApi.getNumOfCommentsByEvent(
         eventData._id
       );
+      if (typeof comments === "number" && context?.permission === "U") {
+        setError(true);
+        setErrorMessage("Failed to get comments, please try again later");
+        setIsLoading(false);
+        return;
+      }
+      if (commentsNum === -1 && context?.permission !== "U") {
+        setError(true);
+        setErrorMessage("Failed to get comments, please try again later");
+        setIsLoading(false);
+        return;
+      }
       setNumOfComments(Number(commentsNum));
       const commentsPerPage = 5;
       setTotalPages(Math.ceil(numOfComments / commentsPerPage));
@@ -45,7 +65,7 @@ export function Comment({ eventData }: { eventData: any }) {
       console.log(comments);
     };
     fetchComments();
-  }, [numOfComments, page]);
+  }, [numOfComments, page, addedNewComment]);
 
   // const commentsData = [
 
@@ -83,17 +103,30 @@ export function Comment({ eventData }: { eventData: any }) {
   return (
     <div className={classes.comments_wrapper}>
       <Title className={classes.comments_title}>Comments:</Title>
+      {error && (
+        <Notification
+          mb={"md"}
+          icon={xIcon}
+          color="red"
+          title={errorMessage}
+          onClick={() => {
+            setError(false);
+            setErrorMessage("");
+          }}
+        ></Notification>
+      )}
       {isLoading && (
         <div className={classes.loader}>
           <Loader />
         </div>
       )}
-      {!isLoading && context?.permission !== "U" && (
+      {!isLoading && !error && context?.permission !== "U" && (
         <div>
           <Text>Users posted {numOfComments} comments so far</Text>
         </div>
       )}
       {!isLoading &&
+        !error &&
         context?.permission === "U" &&
         commentsData.length === 0 && (
           <div>
@@ -102,31 +135,39 @@ export function Comment({ eventData }: { eventData: any }) {
             </Text>
           </div>
         )}
-      {!isLoading && commentsData.length > 0 && context?.permission === "U" && (
-        <ScrollArea type="auto" scrollbarSize={6} classNames={classes} h={200}>
-          {commentsData.map((comment, index) => (
-            <div key={index} className={classes.comment_container}>
-              <Group>
-                <Avatar color="rgb(100, 187, 221)" src={null} />
-                <div>
-                  <Text fw={600} size="sm">
-                    {comment.username}
-                  </Text>
-                  <Text fw={400} size="xs" c="dimmed">
-                    {formatDate(comment.date)}
-                  </Text>
-                </div>
-              </Group>
-              <Text fw={500} pl={54} pt="sm" size="sm">
-                {comment.text}
-              </Text>
-              <Divider size="xs" my="sm" />
-            </div>
-          ))}
-        </ScrollArea>
-      )}
+      {!isLoading &&
+        !error &&
+        commentsData.length > 0 &&
+        context?.permission === "U" && (
+          <ScrollArea
+            type="auto"
+            scrollbarSize={6}
+            classNames={classes}
+            h={200}
+          >
+            {commentsData.map((comment, index) => (
+              <div key={index} className={classes.comment_container}>
+                <Group>
+                  <Avatar color="rgb(100, 187, 221)" src={null} />
+                  <div>
+                    <Text fw={600} size="sm">
+                      {comment.username}
+                    </Text>
+                    <Text fw={400} size="xs" c="dimmed">
+                      {formatDate(comment.date)}
+                    </Text>
+                  </div>
+                </Group>
+                <Text fw={500} pl={54} pt="sm" size="sm">
+                  {comment.text}
+                </Text>
+                <Divider size="xs" my="sm" />
+              </div>
+            ))}
+          </ScrollArea>
+        )}
 
-      {!isLoading && context?.permission === "U" && (
+      {!isLoading && !error && context?.permission === "U" && (
         <div>
           <Modal
             opened={opened}
@@ -145,6 +186,10 @@ export function Comment({ eventData }: { eventData: any }) {
               setNewComment={setNewComment}
               newComment={newComment}
               close={close}
+              addedNewComment={addedNewComment}
+              setAddedNewComment={setAddedNewComment}
+              setErrorMessage={setErrorMessage}
+              setError={setError}
             />
           </Modal>
           <Pagination
@@ -152,6 +197,7 @@ export function Comment({ eventData }: { eventData: any }) {
             value={page}
             onChange={setPage}
             total={totalPages}
+            mt={"lg"}
           />
           <Button
             onClick={open}

@@ -18,6 +18,10 @@ export type commentFormType = {
   setNewComment: (comment: string) => void;
   newComment: string;
   close: () => void;
+  addedNewComment: boolean; // Add the missing property 'addedNewComment'
+  setAddedNewComment: (added: boolean) => void;
+  setErrorMessage: (message: string) => void;
+  setError: (error: boolean) => void;
 };
 
 export type ticketsDataType = {
