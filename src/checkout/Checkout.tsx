@@ -293,6 +293,9 @@ export function Checkout() {
                 >
                   Buy Now
                 </Button>
+                <Button onClick={handleRollBack} color="red">
+                  Cancel
+                </Button>
               </Group>
             </div>
           </form>

@@ -190,9 +190,11 @@ export function UserBar() {
           )}
 
           <Group visibleFrom="sm">
-            <Button variant="default" size="md" onClick={handleBackButton}>
-              <GoArrowLeft />
-            </Button>
+            {context?.route != "checkout" && (
+              <Button variant="default" size="md" onClick={handleBackButton}>
+                <GoArrowLeft />
+              </Button>
+            )}
 
             <Button color="red" onClick={handleLogOut}>
               Sign Out
