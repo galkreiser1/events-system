@@ -1,6 +1,6 @@
 // @ts-ignore
 import react, { useContext, useEffect, useState } from "react";
-import { Title, Text, Button } from "@mantine/core";
+import { Title, Text, Button, Notification, rem } from "@mantine/core";
 import classes from "./EventPage.module.css";
 import { Tickets } from "./tickets/Tickets";
 import { Comment } from "./comments/Comment";
@@ -9,6 +9,7 @@ import { EventApi } from "../api/eventApi";
 import { Loader } from "../loader/Loader";
 import { ticketsDataType } from "../types";
 import { DateTimePicker } from "@mantine/dates";
+import { IconX, IconCheck } from "@tabler/icons-react";
 
 export function EventPage() {
   const [isLoading, setIsLoading] = react.useState<boolean>(true);
@@ -20,6 +21,10 @@ export function EventPage() {
   const [startValue, setStartValue] = useState<Date | null>(null);
   const [endValue, setEndValue] = useState<Date | null>(null);
   const [updatePage, setUpdatePage] = useState<boolean>(false);
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+
+  const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />;
 
   const context = useContext(sessionContext);
   useEffect(() => {
@@ -109,7 +114,7 @@ export function EventPage() {
       return;
     }
     if (newStartDate > newEndDate) {
-      console.log("Error: start date is after end date"); // TODO: add error message
+      console.log("Error: start date is after end date");
       setIsLoading(false);
       return;
     }
@@ -119,7 +124,9 @@ export function EventPage() {
     };
     const res = await EventApi.updateEventDate(context?.eventId ?? "", newDate);
     if (typeof res === "number") {
-      console.log("Error Updating Event"); // TODO: error message, ask to try again
+      setError(true);
+      setErrorMessage("Error Updating Event, Try Again");
+      console.log("Error Updating Event");
     }
     setIsEditing(false);
     setUpdatePage(!updatePage);
@@ -198,6 +205,12 @@ export function EventPage() {
                   placeholder="can only be posponed to a later date"
                   value={startValue}
                   onChange={setStartValue}
+                  error={
+                    newStartDate &&
+                    newEndDate &&
+                    newStartDate > newEndDate &&
+                    "Start date must be before end date"
+                  }
                 />
               )}
               {isEditing && (
@@ -214,14 +227,32 @@ export function EventPage() {
                   placeholder="can only be later than the start date"
                   value={endValue}
                   onChange={setEndValue}
+                  error={
+                    newStartDate &&
+                    newEndDate &&
+                    newStartDate > newEndDate &&
+                    "Start date must be before end date"
+                  }
                 />
               )}
-              {isEditing && (
-                <Button my="lg" onClick={aproveDate}>
-                  Change Date
-                </Button>
+              {error && (
+                <Notification
+                  mt={"md"}
+                  icon={xIcon}
+                  color="red"
+                  title={errorMessage}
+                  onClick={() => {
+                    setError(false);
+                    setErrorMessage("");
+                  }}
+                ></Notification>
               )}
               <div className={classes.edit_wrapper}>
+                {isEditing && (
+                  <Button my="lg" onClick={aproveDate}>
+                    Change Date
+                  </Button>
+                )}
                 {(context?.permission == "A" || context?.permission == "M") &&
                   !isEditing && (
                     <Button

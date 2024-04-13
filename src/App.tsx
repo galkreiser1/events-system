@@ -70,11 +70,11 @@ function App() {
       let result: any = await AuthApi.getUserName();
       result = JSON.parse(result);
       if (typeof result === "number") {
-        navigateTo(window.location.pathname.split("/").pop() || "signin");
+        navigateTo("signin");
       } else {
         setPermission(result?.permission || "U");
         setUsername(result?.username || "");
-        navigateTo(window.location.pathname.split("/").pop() || "catalog");
+        navigateTo("catalog");
       }
     };
 
@@ -83,15 +83,13 @@ function App() {
     }
   }, []);
 
-  //TODO: dont let the user get to pages that need data from previous pages
+  // useEffect(() => {
+  //   window.addEventListener("popstate", () => {
+  //     setRoute(window.location.pathname.split("/").pop() || "signin");
 
-  useEffect(() => {
-    window.addEventListener("popstate", () => {
-      setRoute(window.location.pathname.split("/").pop() || "signin");
-
-      console.log("URL changed:", window.location.href);
-    });
-  }, []);
+  //     console.log("URL changed:", window.location.href);
+  //   });
+  // }, []);
 
   const navigateTo = (newRoute: string) => {
     setRoute(newRoute);
@@ -120,8 +118,6 @@ function App() {
     lockId,
     setLockId,
   };
-
-  //TODO: navigation through URL input
 
   return (
     <sessionContext.Provider value={sessionValues}>
