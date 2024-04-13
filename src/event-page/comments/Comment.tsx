@@ -19,7 +19,7 @@ import { Pagination } from "@mantine/core";
 import { CommentForm } from "./CommentForm/CommentForm";
 import { Loader } from "../../loader/Loader";
 import { sessionContext } from "../../App";
-import { IconX, IconCheck } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 
 export function Comment({ eventData }: { eventData: any }) {
   // const isUser = context.permissions == "U" ? true : false;

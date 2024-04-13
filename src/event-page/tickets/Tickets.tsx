@@ -14,7 +14,7 @@ import classes from "./Tickets.module.css";
 import { sessionContext, useNavigation } from "../../App";
 import { APIStatus, ticketsDataType } from "../../types";
 import { EventApi } from "../../api/eventApi";
-import { IconX, IconCheck } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 
 export function Tickets({
   eventData,

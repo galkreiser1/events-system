@@ -9,7 +9,7 @@ import { EventApi } from "../api/eventApi";
 import { Loader } from "../loader/Loader";
 import { ticketsDataType } from "../types";
 import { DateTimePicker } from "@mantine/dates";
-import { IconX, IconCheck } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 
 export function EventPage() {
   const [isLoading, setIsLoading] = react.useState<boolean>(true);

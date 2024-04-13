@@ -21,7 +21,7 @@ import { EventApi } from "../api/eventApi";
 import { PaymentApi } from "../api/paymentApi";
 import { APIStatus, successDataType } from "../types";
 import { useNavigation } from "../App";
-import { IconX, IconCheck } from "@tabler/icons-react";
+import { IconX } from "@tabler/icons-react";
 
 export function Checkout() {
   const [coupon, setCoupon] = useState<string>("");
