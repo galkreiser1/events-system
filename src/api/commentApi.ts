@@ -1,4 +1,4 @@
-import { APIStatus } from "../types";
+import { APIStatus, commentType } from "../types";
 import axios from "axios";
 import {
   CREATE_COMMENT_PATH,
@@ -8,7 +8,7 @@ import {
 } from "../const";
 
 export const commentApi = {
-  createComment: async (comment: any): Promise<APIStatus> => {
+  createComment: async (comment: commentType): Promise<APIStatus> => {
     try {
       const res = await axios.post(
         API_GATEWAY_URL + CREATE_COMMENT_PATH,

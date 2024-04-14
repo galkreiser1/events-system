@@ -220,7 +220,9 @@ export function Checkout() {
     return expirationDateObject > currentDate;
   };
 
-  const handleInputChange = (event: { target: { name: any; value: any } }) => {
+  const handleInputChange = (event: {
+    target: { name: string; value: string };
+  }) => {
     const { name, value } = event.target;
     setPaymentDetails({ ...paymentDetails, [name]: value });
     setErrors((prev) => ({ ...prev, [name]: "" }));
