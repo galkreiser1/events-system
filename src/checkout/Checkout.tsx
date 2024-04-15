@@ -101,7 +101,7 @@ export function Checkout() {
   }, []);
 
   useEffect(() => {
-    const priceAfterDiscount = originalPrice - discount;
+    const priceAfterDiscount = Math.max(originalPrice - discount, 0);
     setPaymentDetails({ ...paymentDetails, charge: priceAfterDiscount });
 
     setOrderDetails([
@@ -148,15 +148,6 @@ export function Checkout() {
     //   return;
     // }
 
-    if (context?.lockId) {
-      await EventApi.unlockTicket(
-        context?.lockId,
-        context?.eventId,
-        context?.orderData?.ticket_type,
-        context?.orderData?.quantity
-      );
-    }
-
     const res = await PaymentApi.Buy(
       oldEvent,
       context?.orderData?.ticket_type ?? "",
@@ -184,6 +175,16 @@ export function Checkout() {
       console.log("Payment Failed:", res);
       return;
     }
+
+    if (context?.lockId) {
+      await EventApi.unlockTicket(
+        context?.lockId,
+        context?.eventId,
+        context?.orderData?.ticket_type,
+        context?.orderData?.quantity
+      );
+    }
+
     if (typeof res === "object") {
       // type of res is res.data, meaning payment was successful
       const payment_id = res.order_id;
