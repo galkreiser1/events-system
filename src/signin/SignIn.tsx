@@ -1,13 +1,13 @@
 import {
   TextInput,
   PasswordInput,
-  Checkbox,
+  // Checkbox,
   Anchor,
   Paper,
   Title,
   Text,
   Container,
-  Group,
+  // Group,
   Button,
 } from "@mantine/core";
 import classes from "./SignIn.module.css";
@@ -105,12 +105,12 @@ export function SignIn() {
             mt="md"
             error={errorMessage}
           />
-          <Group justify="space-between" mt="lg">
+          {/* <Group justify="space-between" mt="lg">
             <Checkbox label="Remember me" />
             {/* <Anchor component="button" size="sm">
             Forgot password?
           </Anchor> */}
-          </Group>
+          {/* </Group> */}
           <Button fullWidth mt="xl" onClick={handleLogin}>
             Sign in
           </Button>
