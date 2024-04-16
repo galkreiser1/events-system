@@ -1,4 +1,4 @@
-import { APIStatus } from "../types";
+import { APIStatus, commentType } from "../types";
 import axios from "axios";
 import {
   CREATE_COMMENT_PATH,
@@ -7,10 +7,8 @@ import {
   API_GATEWAY_URL,
 } from "../const";
 
-// TODO: errors
-
 export const commentApi = {
-  createComment: async (comment: any): Promise<APIStatus> => {
+  createComment: async (comment: commentType): Promise<APIStatus> => {
     try {
       const res = await axios.post(
         API_GATEWAY_URL + CREATE_COMMENT_PATH,
@@ -20,7 +18,7 @@ export const commentApi = {
         }
       );
 
-      if (res.status === 201) {
+      if (res.status === 200) {
         return APIStatus.Success;
       } else {
         console.log(res);
@@ -73,10 +71,10 @@ export const commentApi = {
       if (res.status === 200) {
         return res.data;
       } else {
-        return handleError(res.status);
+        return -1;
       }
     } catch (e) {
-      return handleError(e);
+      return -1;
     }
   },
 };

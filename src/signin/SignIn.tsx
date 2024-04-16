@@ -32,10 +32,12 @@ export function SignIn() {
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
+    setErrorMessage("");
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    setErrorMessage("");
   };
 
   const handleSignup = () => {
@@ -93,7 +95,7 @@ export function SignIn() {
             placeholder="your username"
             required
             onChange={handleUsernameChange}
-            error={errorMessage === LoginErrorMessages.required}
+            error={errorMessage}
           />
           <PasswordInput
             label="Password"
@@ -101,7 +103,7 @@ export function SignIn() {
             placeholder="Your password"
             required
             mt="md"
-            error={errorMessage === LoginErrorMessages.required}
+            error={errorMessage}
           />
           <Group justify="space-between" mt="lg">
             <Checkbox label="Remember me" />

@@ -1,11 +1,20 @@
 // @ts-ignore
 
 import React, { useContext, useState } from "react";
-import { ScrollArea, Title, Button, Text, NumberInput } from "@mantine/core";
+import {
+  ScrollArea,
+  Title,
+  Button,
+  Text,
+  NumberInput,
+  Notification,
+  rem,
+} from "@mantine/core";
 import classes from "./Tickets.module.css";
 import { sessionContext, useNavigation } from "../../App";
 import { APIStatus, ticketsDataType } from "../../types";
 import { EventApi } from "../../api/eventApi";
+import { IconX } from "@tabler/icons-react";
 
 export function Tickets({
   eventData,
@@ -37,6 +46,10 @@ export function Tickets({
     ticketsData ? ticketsData.map(() => false) : []
   );
 
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />;
+
   const handleChangeTickets = (index: number, value: number) => {
     const newNumOfTicketsArray = [...numOfTicketsArray];
     newNumOfTicketsArray[index] = value;
@@ -52,16 +65,26 @@ export function Tickets({
   const handleBuyNow = async (index: number) => {
     const numOfTickets = numOfTicketsArray[index];
     if (numOfTickets === 0) {
-      console.log("Please choose amount of tickets");
+      setError(true);
+      setErrorMessage("Please choose more than 0 tickets");
+      console.log("0 tickets selected");
       return;
     }
 
     changeLoading(index, true);
     const updatedEvent = await EventApi.getEvent(context?.eventId || "");
+    console.log(updatedEvent);
 
     // check if event dates have changed:
-    if (updatedEvent?.date !== eventData.date) {
-      console.log("Event dates have changed"); // TODO: add error message
+    if (
+      updatedEvent?.start_date !== eventData.start_date ||
+      updatedEvent?.end_date !== eventData.end_date
+    ) {
+      setError(true);
+      setErrorMessage(
+        "Event dates have changed, click on 'Buy Now' to approve"
+      );
+      console.log("Event dates have changed");
       setEventData(updatedEvent);
       changeLoading(index, false);
 
@@ -69,7 +92,11 @@ export function Tickets({
     }
     // check if enough tickets available:
     if (updatedEvent?.tickets[index]?.quantity < numOfTickets) {
-      console.log("Not enough tickets available"); // TODO: add error message
+      setError(true);
+      setErrorMessage(
+        "Not enough tickets available, please choose less tickets"
+      );
+      console.log("Not enough tickets available");
       setTicketsData(updatedEvent?.tickets);
       changeLoading(index, false);
       return;
@@ -109,12 +136,19 @@ export function Tickets({
       navigator?.navigateTo("checkout");
     } else {
       if (res === APIStatus.BadRequest) {
+        setError(true);
+        setErrorMessage(
+          "Not enough tickets available, please choose less tickets"
+        );
         console.log("Not enough tickets available");
       } else {
+        setError(true);
+        setErrorMessage("Error buying tickets, please try again");
+
         console.log("Error buying tickets");
       }
       setTicketsData(updatedEvent?.tickets);
-      // setEventData(updatedEvent); // TODO: update event data or only tickes data?
+      // setEventData(updatedEvent);
       changeLoading(index, false);
       return;
     }
@@ -166,6 +200,18 @@ export function Tickets({
           ))}
         </div>
       </ScrollArea.Autosize>
+      {error && (
+        <Notification
+          mt={"md"}
+          icon={xIcon}
+          color="red"
+          title={errorMessage}
+          onClick={() => {
+            setError(false);
+            setErrorMessage("");
+          }}
+        ></Notification>
+      )}
     </div>
   );
 }

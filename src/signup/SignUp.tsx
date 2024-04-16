@@ -32,15 +32,18 @@ export function SignUp() {
 
   const handleUsernameChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setUsername(e.target.value);
+    setErrorMessage("");
   };
 
   const handlePasswordChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(e.target.value);
+    setErrorMessage("");
   };
   const handlePasswordConfirmChange = (
     e: React.ChangeEvent<HTMLInputElement>
   ) => {
     setPasswordConfirm(e.target.value);
+    setErrorMessage("");
   };
 
   const handleSignUp = async () => {
@@ -100,7 +103,9 @@ export function SignUp() {
             placeholder="your username"
             required
             onChange={handleUsernameChange}
-            error={errorMessage === SignUpErrorMessages.required}
+            error={
+              errorMessage !== SignUpErrorMessages.mismatch && errorMessage
+            }
           />
           <PasswordInput
             onChange={handlePasswordChange}
@@ -108,7 +113,9 @@ export function SignUp() {
             placeholder="Your password"
             required
             mt="md"
-            error={errorMessage === SignUpErrorMessages.required}
+            error={
+              errorMessage !== SignUpErrorMessages.mismatch && errorMessage
+            }
           />
           <PasswordInput
             onChange={handlePasswordConfirmChange}
@@ -116,7 +123,9 @@ export function SignUp() {
             placeholder="Your password"
             required
             mt="md"
-            error={errorMessage === SignUpErrorMessages.mismatch}
+            error={
+              errorMessage === SignUpErrorMessages.mismatch && errorMessage
+            }
           />
 
           <Button fullWidth mt="xl" onClick={handleSignUp}>

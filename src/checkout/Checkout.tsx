@@ -6,6 +6,8 @@ import {
   Group,
   SimpleGrid,
   Loader,
+  Notification,
+  rem,
 } from "@mantine/core";
 import { OrderSummaryList } from "./OrderSummary";
 import classes from "./Checkout.module.css";
@@ -19,6 +21,7 @@ import { EventApi } from "../api/eventApi";
 import { PaymentApi } from "../api/paymentApi";
 import { APIStatus, successDataType } from "../types";
 import { useNavigation } from "../App";
+import { IconX } from "@tabler/icons-react";
 
 export function Checkout() {
   const [coupon, setCoupon] = useState<string>("");
@@ -31,6 +34,13 @@ export function Checkout() {
   const context = useContext(sessionContext);
   const navigator = useNavigation();
   const [loadingRollback, setLoadingRollback] = useState(false);
+  const [couponError, setCouponError] = useState<boolean>(false);
+  const [couponErrorMessage, setCouponErrorMessage] = useState<string>("");
+  const [error, setError] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string>("");
+  const [oldEvent, setOldEvent] = useState<any | null>(null);
+
+  const xIcon = <IconX style={{ width: rem(20), height: rem(20) }} />;
 
   const orderData = [
     { title: "Event:", description: context?.orderData?.event_title },
@@ -74,8 +84,24 @@ export function Checkout() {
     charge: originalPrice,
   });
 
+  const [errors, setErrors] = useState({
+    holder: "",
+    cc: "",
+    exp: "",
+    cvv: "",
+  });
+
   useEffect(() => {
-    const priceAfterDiscount = originalPrice - discount;
+    const fetchOldEvent = async () => {
+      const oldEvent = await EventApi.getEvent(context?.eventId ?? "");
+      setOldEvent(oldEvent);
+    };
+
+    fetchOldEvent();
+  }, []);
+
+  useEffect(() => {
+    const priceAfterDiscount = Math.max(originalPrice - discount, 0);
     setPaymentDetails({ ...paymentDetails, charge: priceAfterDiscount });
 
     setOrderDetails([
@@ -92,7 +118,9 @@ export function Checkout() {
     const couponData = await PaymentApi.getCoupon(coupon);
     console.log(couponData);
     if (typeof couponData === "number") {
-      console.log("Invalid Coupon"); // TODO: Add error message
+      setCouponError(true);
+      setCouponErrorMessage("Invalid Coupon");
+      console.log("Invalid Coupon");
       setCouponLoading(false);
       return;
     }
@@ -104,9 +132,11 @@ export function Checkout() {
   };
 
   const handleFormSubmit = async () => {
+    const isValid = validateForm();
+    if (!isValid) return;
+    if (error) return;
     setBuyLoading(true);
     console.log("Payment Details:", paymentDetails);
-    const event = await EventApi.getEvent(context?.eventId ?? "");
 
     // check if enough tickets are available, only if timer expired
     // if (
@@ -114,9 +144,37 @@ export function Checkout() {
     //   (context?.orderData.quantity ?? 0)
     // ) {
     //   setBuyLoading(false);
-    //   console.log("Not enough tickets available"); // TODO: Add error message
+    //   console.log("Not enough tickets available"); //  Add error message
     //   return;
     // }
+
+    const res = await PaymentApi.Buy(
+      oldEvent,
+      context?.orderData?.ticket_type ?? "",
+      context?.orderData?.quantity ?? 0,
+      paymentDetails,
+      activatedCoupon
+    );
+
+    if (res === APIStatus.Conflict) {
+      setBuyLoading(false);
+      setError(true);
+      setErrorMessage(
+        "Event dates have changed, please cancel and check updated event details"
+      );
+      console.log(
+        "Dates have changed, please cancel and check updated event details"
+      );
+      return;
+    }
+
+    if (typeof res === "number") {
+      setError(true);
+      setErrorMessage("Payment Failed, please try again");
+      setBuyLoading(false);
+      console.log("Payment Failed:", res);
+      return;
+    }
 
     if (context?.lockId) {
       await EventApi.unlockTicket(
@@ -127,25 +185,6 @@ export function Checkout() {
       );
     }
 
-    const res = await PaymentApi.Buy(
-      event,
-      context?.orderData?.ticket_type ?? "",
-      context?.orderData?.quantity ?? 0,
-      paymentDetails,
-      activatedCoupon
-    );
-
-    if (res === APIStatus.Conflict) {
-      setBuyLoading(false);
-      console.log("Dates have changed, go back to check updated event details"); // TODO: Add error message
-      return;
-    }
-
-    if (typeof res === "number") {
-      setBuyLoading(false);
-      console.log("Payment Failed:", res); // TODO: Add error message "Try again"
-      return;
-    }
     if (typeof res === "object") {
       // type of res is res.data, meaning payment was successful
       const payment_id = res.order_id;
@@ -166,12 +205,67 @@ export function Checkout() {
     }
   };
 
-  const handleInputChange = (event: { target: { name: any; value: any } }) => {
-    const { name, value } = event.target;
-    setPaymentDetails({ ...paymentDetails, [name]: value });
+  const isExpirationDateValid = (expirationDate: string) => {
+    // Parse the expiration date string in MM/YY format to get month and year
+    const [expMonth, expYear] = expirationDate
+      .split("/")
+      .map((part) => parseInt(part, 10));
+
+    // Create a new Date object for the expiration date with the parsed month and year
+    const expirationDateObject = new Date(2000 + expYear, expMonth - 1); // Year 2000 is used as a base year for simplicity
+
+    // Get the current date
+    const currentDate = new Date();
+
+    // Compare the expiration date with the current date
+    return expirationDateObject > currentDate;
   };
 
-  //TODO: add form validations
+  const handleInputChange = (event: {
+    target: { name: string; value: string };
+  }) => {
+    const { name, value } = event.target;
+    setPaymentDetails({ ...paymentDetails, [name]: value });
+    setErrors((prev) => ({ ...prev, [name]: "" }));
+  };
+
+  const validateForm = () => {
+    const { holder, cc, exp, cvv } = paymentDetails;
+    const newErrors: {
+      holder: string;
+      cc: string;
+      exp: string;
+      cvv: string;
+    } = {
+      holder: "",
+      cc: "",
+      exp: "",
+      cvv: "",
+    };
+
+    if (!holder.trim() || !/^[a-zA-Z ]+$/.test(holder)) {
+      newErrors.holder = "Please enter your name, English letters only";
+    }
+
+    if (!cc.trim() || !/^\d+$/.test(cc)) {
+      newErrors.cc = "Please enter a valid credit card number - digits only";
+    }
+
+    if (!exp.trim() || !/^\d{2}\/\d{2}$/.test(exp)) {
+      newErrors.exp = "Please enter a valid expiration date (MM/YY)";
+    } else if (!isExpirationDateValid(exp)) {
+      newErrors.exp = "Please enter a valid expiration date (future date)";
+    }
+
+    if (!cvv.trim() || !/^\d{3}$/.test(cvv)) {
+      newErrors.cvv = "Please enter a valid CVV (3 digits)";
+    }
+
+    setErrors(newErrors);
+    // return Object.keys(newErrors).length === 0;
+    return Object.values(newErrors).every((error) => !error);
+  };
+
   const handleRollBack = async () => {
     setLoadingRollback(true);
     console.log("Rolling back");
@@ -232,6 +326,7 @@ export function Checkout() {
                 value={paymentDetails.holder}
                 onChange={handleInputChange}
                 name="holder"
+                error={errors.holder}
 
                 //{...form.getInputProps("holder")}
               />
@@ -243,6 +338,7 @@ export function Checkout() {
                 value={paymentDetails.cc}
                 onChange={handleInputChange}
                 name="cc"
+                error={errors.cc}
               />
               <SimpleGrid cols={{ base: 1, sm: 2 }}>
                 <TextInput
@@ -253,6 +349,7 @@ export function Checkout() {
                   value={paymentDetails.exp}
                   onChange={handleInputChange}
                   name="exp"
+                  error={errors.exp}
                 />
                 <TextInput
                   style={{ marginTop: "15px" }}
@@ -262,13 +359,19 @@ export function Checkout() {
                   value={paymentDetails.cvv}
                   onChange={handleInputChange}
                   name="cvv"
+                  error={errors.cvv}
                 />
               </SimpleGrid>
               <div className={classes.controlscpn}>
                 <TextInput
                   mb={15}
                   value={coupon}
-                  onChange={(event) => setCoupon(event.target.value)}
+                  error={couponError && couponErrorMessage}
+                  onChange={(event) => {
+                    setCouponError(false);
+                    setCouponErrorMessage("");
+                    setCoupon(event.target.value);
+                  }}
                   placeholder="Insert Coupon Code"
                   classNames={{
                     input: classes.inputcpn,
@@ -293,7 +396,22 @@ export function Checkout() {
                 >
                   Buy Now
                 </Button>
+                <Button onClick={handleRollBack} color="red">
+                  Cancel
+                </Button>
               </Group>
+              {error && (
+                <Notification
+                  mt={"md"}
+                  icon={xIcon}
+                  color="red"
+                  title={errorMessage}
+                  onClick={() => {
+                    setError(false);
+                    setErrorMessage("");
+                  }}
+                ></Notification>
+              )}
             </div>
           </form>
         </div>

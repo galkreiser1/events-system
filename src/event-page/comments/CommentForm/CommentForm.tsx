@@ -2,7 +2,7 @@
 import React, { useState, useContext } from "react";
 import { Textarea, Button } from "@mantine/core";
 import "./CommentForm.css";
-import { commentType } from "../../../types";
+import { APIStatus, commentType } from "../../../types";
 import { commentFormType } from "../../../types";
 import { commentApi } from "../../../api/commentApi";
 import { sessionContext } from "../../../App";
@@ -20,10 +20,24 @@ import { sessionContext } from "../../../App";
 //   date: Date;
 // };
 
+// export interface commentFormType {
+//   setNewComment: (comment: string) => void;
+//   newComment: string;
+//   close: () => void;
+//   addedNewComment: boolean; // Add the missing property 'addedNewComment'
+//   setAddedNewComment: (added: boolean) => void;
+//   setErrorMessage: (message: string) => void;
+//   setError: (error: boolean) => void;
+// }
+
 export function CommentForm({
   setNewComment,
   newComment,
   close,
+  addedNewComment,
+  setAddedNewComment,
+  setErrorMessage,
+  setError,
 }: commentFormType) {
   const context = useContext(sessionContext);
 
@@ -42,7 +56,15 @@ export function CommentForm({
     };
     close();
     setNewComment("");
-    await commentApi.createComment(commentData);
+    const res = await commentApi.createComment(commentData);
+    if (res === APIStatus.Success) {
+      setAddedNewComment(!addedNewComment);
+      console.log("Comment posted successfully");
+    } else {
+      setError(true);
+      setErrorMessage("Failed to post comment, please try again");
+      console.log("Failed to post comment");
+    }
 
     console.log(commentData);
   };
