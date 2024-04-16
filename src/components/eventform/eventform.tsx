@@ -156,6 +156,8 @@ export function EventForm() {
   };
 
   const handleSubmit = async (values: any) => {
+    setError("");
+    setSuccess(false);
     if (checkTicketInputs()) {
       return;
     }
