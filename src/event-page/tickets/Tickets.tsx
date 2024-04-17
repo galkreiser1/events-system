@@ -67,7 +67,7 @@ export function Tickets({
     if (numOfTickets === 0) {
       setError(true);
       setErrorMessage("Please choose more than 0 tickets");
-      console.log("0 tickets selected");
+      // console.log("0 tickets selected");
       return;
     }
 
@@ -84,7 +84,7 @@ export function Tickets({
       setErrorMessage(
         "Event dates have changed, click on 'Buy Now' to approve"
       );
-      console.log("Event dates have changed");
+      // console.log("Event dates have changed");
       setEventData(updatedEvent);
       changeLoading(index, false);
 
@@ -96,7 +96,7 @@ export function Tickets({
       setErrorMessage(
         "Not enough tickets available, please choose less tickets"
       );
-      console.log("Not enough tickets available");
+      // console.log("Not enough tickets available");
       setTicketsData(updatedEvent?.tickets);
       changeLoading(index, false);
       return;
@@ -131,7 +131,7 @@ export function Tickets({
         ticket_index: index,
       };
       context?.setOrderData(orderData);
-      console.log(context?.orderData);
+      // console.log(context?.orderData);
       changeLoading(index, false);
       navigator?.navigateTo("checkout");
     } else {
@@ -140,12 +140,12 @@ export function Tickets({
         setErrorMessage(
           "Not enough tickets available, please choose less tickets"
         );
-        console.log("Not enough tickets available");
+        // console.log("Not enough tickets available");
       } else {
         setError(true);
         setErrorMessage("Error buying tickets, please try again");
 
-        console.log("Error buying tickets");
+        // console.log("Error buying tickets");
       }
       setTicketsData(updatedEvent?.tickets);
       // setEventData(updatedEvent);

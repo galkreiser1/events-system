@@ -9,7 +9,7 @@ export const Timer = ({ onComplete }: { onComplete: () => void }) => {
   const [isPlaying, setIsPlaying] = useState(context?.orderData.quantity !== 0);
 
   const handleTimeOut = () => {
-    console.log("Time Out!");
+    // console.log("Time Out!");
     onComplete();
     setIsPlaying(false);
     return { shouldRepeat: false, delay: 0 };

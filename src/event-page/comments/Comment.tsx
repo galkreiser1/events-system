@@ -61,8 +61,8 @@ export function Comment({ eventData }: { eventData: any }) {
       setCommentsData(comments);
 
       setIsLoading(false);
-      console.log(numOfComments);
-      console.log(comments);
+      // console.log(numOfComments);
+      // console.log(comments);
     };
     fetchComments();
   }, [numOfComments, page, addedNewComment]);

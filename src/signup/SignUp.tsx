@@ -49,12 +49,12 @@ export function SignUp() {
   const handleSignUp = async () => {
     if (password.length === 0 || username.length === 0) {
       setErrorMessage(SignUpErrorMessages.required);
-      console.log(SignUpErrorMessages.required);
+      // console.log(SignUpErrorMessages.required);
       return;
     }
     if (password !== passwordConfirm) {
       setErrorMessage(SignUpErrorMessages.mismatch);
-      console.log(SignUpErrorMessages.mismatch);
+      // console.log(SignUpErrorMessages.mismatch);
       return;
     }
     setIsLoading(true);
@@ -69,7 +69,7 @@ export function SignUp() {
 
     if (res === APIStatus.AlreadyExists) {
       setErrorMessage(SignUpErrorMessages.exists);
-      console.log(SignUpErrorMessages.exists);
+      // console.log(SignUpErrorMessages.exists);
       return;
     }
     if (res === APIStatus.ServerError) {

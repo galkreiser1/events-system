@@ -82,7 +82,6 @@ export const AuthApi = {
   },
   getUserName: async (): Promise<string | APIStatus> => {
     try {
-      console.log("get username");
       const response = await fetch(SERVER_URL + USERNAME_PATH, {
         method: "GET",
         credentials: "include",

@@ -29,7 +29,7 @@ export function EventPage() {
   const context = useContext(sessionContext);
   useEffect(() => {
     const fetchEvent = async () => {
-      console.log(context);
+      // console.log(context);
 
       const eventId = context?.eventId ?? "";
       const eventData = await EventApi.getEvent(eventId);
@@ -41,7 +41,7 @@ export function EventPage() {
       setNewStartDate(new Date(eventData.start_date));
       setNewEndDate(new Date(eventData.end_date));
       setIsLoading(false);
-      console.log(eventData);
+      // console.log(eventData);
     };
     fetchEvent();
   }, [updatePage]);
@@ -106,15 +106,15 @@ export function EventPage() {
 
   const aproveDate = async () => {
     setIsLoading(true);
-    console.log("Approved new start date:", newStartDate);
-    console.log("Approved new start date:", newEndDate);
+    // console.log("Approved new start date:", newStartDate);
+    // console.log("Approved new end date:", newEndDate);
     if (newStartDate === undefined || newEndDate === undefined) {
-      console.log("nust choose date and time");
+      // console.log("nust choose date and time");
       setIsLoading(false);
       return;
     }
     if (newStartDate > newEndDate) {
-      console.log("Error: start date is after end date");
+      // console.log("Error: start date is after end date");
       setIsLoading(false);
       return;
     }
@@ -126,7 +126,7 @@ export function EventPage() {
     if (typeof res === "number") {
       setError(true);
       setErrorMessage("Error Updating Event, Try Again");
-      console.log("Error Updating Event");
+      // console.log("Error Updating Event");
     }
     setIsEditing(false);
     setUpdatePage(!updatePage);

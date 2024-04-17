@@ -71,7 +71,7 @@ export function Checkout() {
   //   { title: "Price After Discount:", description: "100$" },
   // ];
   const [orderDetails, setOrderDetails] = useState(orderData);
-  console.log(orderDetails);
+  // console.log(orderDetails);
   const originalPrice = parseInt(
     orderData[2]?.description?.slice(0, -1) ?? "0"
   );
@@ -110,24 +110,24 @@ export function Checkout() {
       { title: "Price After Discount:", description: `${priceAfterDiscount}$` },
     ]);
 
-    console.log(orderDetails);
+    // console.log(orderDetails);
   }, [discount]);
 
   const activateCoupon = async (coupon: string) => {
     setCouponLoading(true);
     const couponData = await PaymentApi.getCoupon(coupon);
-    console.log(couponData);
+    // console.log(couponData);
     if (typeof couponData === "number") {
       setCouponError(true);
       setCouponErrorMessage("Invalid Coupon");
-      console.log("Invalid Coupon");
+      // console.log("Invalid Coupon");
       setCouponLoading(false);
       return;
     }
     setActivatedCoupon(coupon);
     setCouponLoading(false);
     setDiscount(couponData.discount);
-    console.log("Coupon Activated");
+    // console.log("Coupon Activated");
     return;
   };
 
@@ -162,9 +162,9 @@ export function Checkout() {
       setErrorMessage(
         "Event dates have changed, please cancel and check updated event details"
       );
-      console.log(
-        "Dates have changed, please cancel and check updated event details"
-      );
+      // console.log(
+      //   "Dates have changed, please cancel and check updated event details"
+      // );
       return;
     }
 
@@ -172,7 +172,7 @@ export function Checkout() {
       setError(true);
       setErrorMessage("Payment Failed, please try again");
       setBuyLoading(false);
-      console.log("Payment Failed:", res);
+      // console.log("Payment Failed:", res);
       return;
     }
 
@@ -200,7 +200,7 @@ export function Checkout() {
       context?.setSuccessData(successData);
 
       setBuyLoading(false);
-      console.log("Payment Successful");
+      // console.log("Payment Successful");
       navigator?.navigateTo("success");
     }
   };
@@ -268,7 +268,7 @@ export function Checkout() {
 
   const handleRollBack = async () => {
     setLoadingRollback(true);
-    console.log("Rolling back");
+    // console.log("Rolling back");
     // const ticketsToRollBack = {
     //   ticket_type: context?.orderData.ticket_type ?? "",
     //   quantity: -(context?.orderData.quantity ?? 0),

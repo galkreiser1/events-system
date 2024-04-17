@@ -47,7 +47,7 @@ export function SignIn() {
   const handleLogin = async () => {
     if (password.length === 0 || username.length === 0) {
       setErrorMessage(LoginErrorMessages.required);
-      console.log(LoginErrorMessages.required);
+      // console.log(LoginErrorMessages.required);
       return;
     }
     setErrorMessage("");
@@ -64,12 +64,12 @@ export function SignIn() {
     }
     if (res === APIStatus.BadRequest) {
       setErrorMessage(LoginErrorMessages.invalid);
-      console.log(LoginErrorMessages.invalid);
+      // console.log(LoginErrorMessages.invalid);
       return;
     }
     if (res === APIStatus.Unauthorized) {
       setErrorMessage(LoginErrorMessages.invalid);
-      console.log(LoginErrorMessages.invalid);
+      // console.log(LoginErrorMessages.invalid);
       return;
     }
   };

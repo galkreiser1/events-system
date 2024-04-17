@@ -63,10 +63,10 @@ export function CommentForm({
     } else {
       setError(true);
       setErrorMessage("Failed to post comment, please try again");
-      console.log("Failed to post comment");
+      // console.log("Failed to post comment");
     }
 
-    console.log(commentData);
+    // console.log(commentData);
   };
 
   return (

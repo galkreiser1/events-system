@@ -21,11 +21,11 @@ export const commentApi = {
       if (res.status === 200) {
         return APIStatus.Success;
       } else {
-        console.log(res);
+        // console.log(res);
         return handleError(res.status);
       }
     } catch (e) {
-      console.log("failed to axios.post from frontend commentApi", e);
+      // console.log("failed to axios.post from frontend commentApi", e);
       return handleError(e);
     }
   },
