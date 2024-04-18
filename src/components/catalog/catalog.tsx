@@ -248,7 +248,7 @@ export function Catalog() {
 
   return (
     <>
-      <Title order={1} ta="center" mb={50}>
+      <Title order={2} ta="center" mb={40}>
         Catalog
       </Title>
       <Container py="xl">
