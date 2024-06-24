@@ -2,7 +2,7 @@
 
 This is the frontend repository for the Events System Project.  
   
-You can view the backend repository here - https://github.com/BennyMSV/events-system-backend
+You can view the backend repository here - https://github.com/galkreiser1/events-system-backend
 
 The project is deployed, you can access it via this link - https://bennymsv.github.io/events-system/
 
